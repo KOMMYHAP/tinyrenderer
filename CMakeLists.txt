@@ -19,6 +19,9 @@ enable_cxx_compiler_flag_if_supported("-std=c++17")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo CACHE STRING INTERNAL FORCE)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
+
 set(LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 add_subdirectory("${LIB_DIR}")
 
