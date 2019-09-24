@@ -14,3 +14,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE "${SRC_DIR}")
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${TGA_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "tga")
+
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Lessons")

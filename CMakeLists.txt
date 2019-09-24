@@ -17,8 +17,12 @@ enable_cxx_compiler_flag_if_supported("-Wextra")
 enable_cxx_compiler_flag_if_supported("-pedantic")
 enable_cxx_compiler_flag_if_supported("-std=c++17")
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 set(LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 add_subdirectory("${LIB_DIR}")
 
 file(GLOB LESSONS_DIR "lesson_*")
 add_subdirectory(${LESSONS_DIR})
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT lesson_1)

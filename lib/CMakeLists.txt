@@ -6,13 +6,16 @@ set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "Build the GLFW documentation")
 set(GLFW_INSTALL OFF CACHE INTERNAL "Generate installation target")
 set(GLFW_DIR "${GLFW_DIR}" PARENT_SCOPE)
 add_subdirectory("${GLFW_DIR}")
+set_target_properties("glfw" PROPERTIES FOLDER "Libraries")
 
 # glad
 set(GLAD_DIR "${LIB_DIR}/glad")
 set(GLAD_DIR "${GLAD_DIR}" PARENT_SCOPE)
 add_subdirectory("${GLAD_DIR}")
+set_target_properties("glad" PROPERTIES FOLDER "Libraries")
 
 # TGA
 set(TGA_DIR "${LIB_DIR}/tga")
 set(TGA_DIR "${TGA_DIR}" PARENT_SCOPE)
 add_subdirectory("${TGA_DIR}")
+set_target_properties("tga" PROPERTIES FOLDER "Libraries")
