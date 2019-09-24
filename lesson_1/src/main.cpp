@@ -1,36 +1,21 @@
 #include "tgaimage.h"
-#include <iostream>
 
 int main(int argc, char ** argv)
 {
-	using std::string;
+	int w = 100, h = 100;
+	TGA::Image image {w, h, 3};
 
-	bool needHelp = true;
-	string imageFilename;
-
-	if (argc == 3)
+	int step_x = 10;
+	for (int x = 0; x < w; x += step_x)
 	{
-		string _argv {argv[1]};
-		if (_argv == "--input" || _argv == "-i")
+		int step_y = 3;
+		for (int y = 0; y < h; y += step_y)
 		{
-			imageFilename = argv[2];
-			needHelp = false;
+			image.set(x, y, TGA::red);
 		}
 	}
 
-	if (needHelp)
-	{
-		std::cout << "Lesson #1\n"
-			<< "--help | -h						prints this help message.\n"
-			<< "--input | -i					specifies filename for .tga image." << std::endl;
-		return 1;	
-	}
-
-	TGA::Image image;
-	if (!image.read_tga_file(imageFilename.c_str()))
-	{
-		return 1;	
-	}
+	image.write_tga_file("test.tga");
 
 	return 0;
 }
