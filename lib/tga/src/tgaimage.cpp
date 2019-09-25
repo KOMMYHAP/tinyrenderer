@@ -152,12 +152,12 @@ bool Image::read_tga_file(const char *filename) {
 	return true;
 }
 
-bool Image::write_tga_file(const char *filename, bool rle) {
+bool Image::write_tga_file(const char *filename, bool rle) const {
 	unsigned char developer_area_ref[4] = {0, 0, 0, 0};
 	unsigned char extension_area_ref[4] = {0, 0, 0, 0};
 	unsigned char footer[18] = {'T','R','U','E','V','I','S','I','O','N','-','X','F','I','L','E','.','\0'};
 	std::ofstream out;
-	out.open (filename, std::ios::binary);
+	out.open (filename, std::ios::binary | std::ios::out | std::ios::trunc);
 	if (!out.is_open()) {
 		std::cerr << "can't open file " << filename << "\n";
 		out.close();

@@ -51,7 +51,7 @@ namespace TGA
 		void swap(Image & other) noexcept;
 
 		bool read_tga_file(const char *filename);
-		bool write_tga_file(const char *filename, bool rle = true);
+		bool write_tga_file(const char *filename, bool rle = true) const;
 
 		bool flip_horizontally();
 		bool flip_vertically();
