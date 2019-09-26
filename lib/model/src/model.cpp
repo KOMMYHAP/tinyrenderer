@@ -26,14 +26,15 @@ namespace ObjModel
 	            for (int i =0;i<3;i++) iss >> v.raw[i];
 	            model->vertexes.emplace_back(std::move(v));
 	        } else if (!line.compare(0, 2, "f ")) {
-	            std::vector<int> f;
-	            int itrash, idx;
+	            std::array<int, 3> face;
+	            int itrash;
 	            iss >> trash;
-	            while (iss >> idx >> trash >> itrash >> trash >> itrash) {
-	                idx--; // in wavefront obj all indices start at 1, not zero
-	                f.push_back(idx);
-	            }
-	            model->faces.emplace_back(std::move(f));
+				for (auto & index : face)
+				{
+					iss >> index >> trash >> itrash >> trash >> itrash;
+					index -= 1; // in wavefront .obj all indexes start at 1, not 0
+				}
+	            model->faces.emplace_back(std::move(face));
 	        }
 	    }
 

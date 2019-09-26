@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 #include <optional>
 #include "geometry.h"
 
@@ -13,7 +14,7 @@ namespace ObjModel
 
 	struct Model
 	{
-		using face_t = std::vector<int>;
+		using face_t = std::array<int, 3>;
 
 		std::vector<face_t>		faces;
 		std::vector<Vec3f>		vertexes;
