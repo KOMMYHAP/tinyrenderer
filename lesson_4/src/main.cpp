@@ -105,8 +105,8 @@ int main(int argc, char ** argv)
 	auto ConvertToModelPos = [w, h](const geometry::Vec3f & v)
 	{
 		return geometry::Vec2i {
-			static_cast<int>((v[0] + 1.0f) / 2 * (w - 1)),
-			static_cast<int>((v[1] + 1.0f) / 2 * (h - 1))
+			static_cast<int>((v[0] + 1.0f) * w / 2),
+			static_cast<int>((v[1] + 1.0f) * h / 2)
 		};
 	};
 	
@@ -120,12 +120,45 @@ int main(int argc, char ** argv)
 		};
 	};
 
+	auto ClampColor = [](TGA::Color value, TGA::Color min, TGA::Color max)
+	{
+		return TGA::Color {
+			std::clamp(value.raw[0], min.raw[0], max.raw[0]),
+			std::clamp(value.raw[1], min.raw[1], max.raw[1]),
+			std::clamp(value.raw[2], min.raw[2], max.raw[2]),
+			std::clamp(value.raw[3], min.raw[3], max.raw[3]),
+		};
+	};
+
+	geometry::Vec3f light_pos {0.0f, 0.0f, -1.0f};
+
 	for (auto && face : model->faces)
 	{
-		auto p0 = ConvertToModelPos(model->vertexes[face[0]]);
-		auto p1 = ConvertToModelPos(model->vertexes[face[1]]);
-		auto p2 = ConvertToModelPos(model->vertexes[face[2]]);
-		DoTriangle({p0, p1, p2}, image, GetRandColor());
+		using namespace geometry;
+
+		std::array<Vec2i, 3> screenVertexes;
+		std::array<Vec3f, 3> worldVertexes;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			auto v = model->vertexes[face[i]];
+			worldVertexes[i] = v;
+			screenVertexes[i] = ConvertToModelPos(v);
+		}
+
+		auto n = Normalize(CrossProduct(worldVertexes[2] - worldVertexes[0], worldVertexes[1] - worldVertexes[0]));
+
+		auto intensity = ScalarProduct(n, light_pos);
+		if (intensity > 0.0f)
+		{
+			auto value = Vec3f {1.0f, 1.0f, 1.0f} * intensity;
+			TGA::Color color {value.m_data, 3};
+			DoTriangle(screenVertexes, image, ClampColor(color, TGA::black, TGA::white));
+		}
+		else
+		{
+			int a = 1;
+		}
 	}
 
 	image.flip_vertically();
