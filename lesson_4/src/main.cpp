@@ -62,9 +62,45 @@ void DoLine(Vec2i p0, Vec2i p1, TGA::Image & image, TGA::Color color)
 
 void DoTriangle(Vec2i p0, Vec2i p1, Vec2i p2, TGA::Image & image, TGA::Color color)
 {
-	DoLine(p0, p1, image, color);
-	DoLine(p1, p2, image, color);
-	DoLine(p2, p0, image, color);
+	using std::swap, std::min, std::max;
+
+	// sort vertexes by Y: p0 < p1 < p2
+	if (p0.y > p1.y)
+	{
+		swap(p0, p1);
+	}
+	if (p0.y > p2.y)
+	{
+		swap(p0, p2);
+	}
+	if (p1.y > p2.y)
+	{
+		swap(p1, p2);
+	}
+	
+	auto ComputeX = [](Vec2i p0, Vec2i p1, int y)
+	{
+		if (p1.y == p0.y)
+		{
+			return float(p1.x);
+		}
+		return (p1.x - p0.x) * (y - p0.y) / static_cast<float>(p1.y - p0.y) + p0.x;
+	};
+
+	std::array<Vec2i, 3> pivots {p0, p1, p2};
+
+	int ymin = p0.y, ymax = p2.y;
+
+	for (int y = ymin; y <= ymax; ++y)
+	{
+		if (y == p1.y)
+		{
+			pivots = {p2, p0, p1};
+		}
+		int x1 = ComputeX(pivots[0], pivots[1], y);
+		int x2 = ComputeX(pivots[0], pivots[2], y);
+		DoLine(x1, y, x2, y, image, color);
+	}
 }
 
 int main(int argc, char ** argv)
