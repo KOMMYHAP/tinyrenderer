@@ -3,6 +3,7 @@ project("geometry")
 set(SRC 
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/geometry.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/geometry.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/geometry.inl"
 )
 
 add_library(${PROJECT_NAME}_i INTERFACE)

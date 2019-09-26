@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace ObjModel
+namespace model
 {
 	std::optional<Model> LoadFromFile(const std::string& filename)
 	{
@@ -22,8 +22,8 @@ namespace ObjModel
 	        char trash;
 	        if (!line.compare(0, 2, "v ")) {
 	            iss >> trash;
-	            Vec3f v;
-	            for (int i =0;i<3;i++) iss >> v.raw[i];
+	            geometry::Vec3f v;
+	            for (int i =0;i<3;i++) iss >> v[i];
 	            model->vertexes.emplace_back(std::move(v));
 	        } else if (!line.compare(0, 2, "f ")) {
 	            std::array<int, 3> face;

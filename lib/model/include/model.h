@@ -6,7 +6,7 @@
 #include <optional>
 #include "geometry.h"
 
-namespace ObjModel
+namespace model
 {
 	struct Model;
 	
@@ -16,7 +16,7 @@ namespace ObjModel
 	{
 		using face_t = std::array<int, 3>;
 
-		std::vector<face_t>		faces;
-		std::vector<Vec3f>		vertexes;
+		std::vector<face_t>				faces;
+		std::vector<geometry::Vec3f>	vertexes;
 	};
 }
