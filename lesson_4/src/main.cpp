@@ -3,11 +3,12 @@
 #include <iostream>
 
 #include "tgaimage.h"
+#include "geometry.h"
 #include "model.h"
 
 void DoLine(int x0, int y0, int x1, int y1, TGA::Image & image, TGA::Color color);
-void DoLine(Vec2i p0, Vec2i p1, TGA::Image & image, TGA::Color color);
-void DoTriangle(Vec2i p0, Vec2i p1, Vec2i p2, TGA::Image & image, TGA::Color color);
+void DoLine(geometry::Vec2i p0, geometry::Vec2i p1, TGA::Image & image, TGA::Color color);
+void DoTriangle(std::array<geometry::Vec2i, 3> points, TGA::Image & image, TGA::Color color);
 
 void DoLine(int x0, int y0, int x1, int y1, TGA::Image & image, TGA::Color color)
 {
@@ -55,57 +56,43 @@ void DoLine(int x0, int y0, int x1, int y1, TGA::Image & image, TGA::Color color
 	}
 }
 
-void DoLine(Vec2i p0, Vec2i p1, TGA::Image & image, TGA::Color color)
+void DoLine(geometry::Vec2i p0, geometry::Vec2i p1, TGA::Image & image, TGA::Color color)
 {
-	DoLine(p0.x, p0.y, p1.x, p1.y, image, std::move(color));
+	DoLine(p0[0], p0[1], p1[0], p1[1], image, std::move(color));
 }
 
-void DoTriangle(Vec2i p0, Vec2i p1, Vec2i p2, TGA::Image & image, TGA::Color color)
+void DoTriangle(std::array<geometry::Vec2i, 3> points, TGA::Image & image, TGA::Color color)
 {
-	using std::swap, std::min, std::max;
+	geometry::Vec2i bbox_min {image.get_width() - 1, image.get_height() - 1};
+	geometry::Vec2i bbox_max {0, 0};
 
-	// sort vertexes by Y: p0 < p1 < p2
-	if (p0.y > p1.y)
+	for (auto && point : points)
 	{
-		swap(p0, p1);
-	}
-	if (p0.y > p2.y)
-	{
-		swap(p0, p2);
-	}
-	if (p1.y > p2.y)
-	{
-		swap(p1, p2);
+		for (int i = 0; i < 2; ++i)
+		{
+			bbox_min[i] = std::min(bbox_min[i], point[i]);
+			bbox_max[i] = std::max(bbox_max[i], point[i]);
+		}
 	}
 	
-	auto ComputeX = [](Vec2i p0, Vec2i p1, int y)
+	for (int y = bbox_min[1]; y <= bbox_max[1]; ++y)
 	{
-		if (p1.y == p0.y)
+		for (int x = bbox_min[0]; x <= bbox_max[0]; ++x)
 		{
-			return float(p1.x);
-		}
-		return (p1.x - p0.x) * (y - p0.y) / static_cast<float>(p1.y - p0.y) + p0.x;
-	};
+			geometry::Vec2i p {x, y};
+			auto u = geometry::ConvertToBarycentric(points[0], points[1], points[2], p);
 
-	std::array<Vec2i, 3> pivots {p0, p1, p2};
-
-	int ymin = p0.y, ymax = p2.y;
-
-	for (int y = ymin; y <= ymax; ++y)
-	{
-		if (y == p1.y)
-		{
-			pivots = {p2, p0, p1};
-		}
-		int x1 = ComputeX(pivots[0], pivots[1], y);
-		int x2 = ComputeX(pivots[0], pivots[2], y);
-		DoLine(x1, y, x2, y, image, color);
+			if (u[0] >= 0.0f && u[1] >= 0.0f && u[2] >= 0.0f)
+			{
+				image.set(x, y, color);
+			}
+		}	
 	}
 }
 
 int main(int argc, char ** argv)
 {
-	auto model = ObjModel::LoadFromFile("../../models/african_head.obj");
+	auto model = model::LoadFromFile("../../models/african_head.obj");
 	if (!model)
 	{
 		std::cerr << "Cannot load model from file!" << std::endl;
@@ -115,11 +102,21 @@ int main(int argc, char ** argv)
 	int w = 1000, h = 1000;
 	TGA::Image image {w, h, 3};
 
-	auto ConvertToModelPos = [w, h](const Vec3f & v)
+	auto ConvertToModelPos = [w, h](const geometry::Vec3f & v)
 	{
-		return Vec2i {
-			static_cast<int>((v.x + 1.0f) / 2 * (w - 1)),
-			static_cast<int>((v.y + 1.0f) / 2 * (h - 1))
+		return geometry::Vec2i {
+			static_cast<int>((v[0] + 1.0f) / 2 * (w - 1)),
+			static_cast<int>((v[1] + 1.0f) / 2 * (h - 1))
+		};
+	};
+	
+	auto GetRandColor = []()
+	{
+		return TGA::Color{
+			static_cast<unsigned char>(rand() % 255),
+			static_cast<unsigned char>(rand() % 255),
+			static_cast<unsigned char>(rand() % 255),
+			static_cast<unsigned char>(255)
 		};
 	};
 
@@ -128,7 +125,7 @@ int main(int argc, char ** argv)
 		auto p0 = ConvertToModelPos(model->vertexes[face[0]]);
 		auto p1 = ConvertToModelPos(model->vertexes[face[1]]);
 		auto p2 = ConvertToModelPos(model->vertexes[face[2]]);
-		DoTriangle(p0, p1, p2, image, TGA::white);
+		DoTriangle({p0, p1, p2}, image, GetRandColor());
 	}
 
 	image.flip_vertically();
