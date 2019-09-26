@@ -15,19 +15,48 @@ namespace TGA
 		constexpr Color() noexcept
 			: val(0), bytespp(1) 
 		{}
-
-		constexpr Color(unsigned char R, unsigned char G, unsigned char B, unsigned char A) noexcept
-			: b(B), g(G), r(R), a(A), bytespp(4) 
+		
+		template <typename U, std::enable_if_t<std::is_integral_v<U>> * = nullptr>
+		constexpr Color(U r, U g, U b, U a) noexcept
+			: b(b), g(g), r(r), a(a), bytespp(4) 
+		{}
+		
+		template <typename U, std::enable_if_t<std::is_floating_point_v<U>> * = nullptr>
+		constexpr Color(U r, U g, U b, U a) noexcept
+			: b(static_cast<unsigned char>(b * 255.0f))
+			, g(static_cast<unsigned char>(g * 255.0f))
+			, r(static_cast<unsigned char>(r * 255.0f))
+			, a(static_cast<unsigned char>(a * 255.0f))
+			, bytespp(4) 
 		{}
 
 		constexpr Color(int v, int bpp) noexcept
 			: val(v), bytespp(bpp) 
 		{}
-
+		
+		template <typename U, size_t Dim, std::enable_if_t<Dim <= 4> * = nullptr>
+		constexpr Color(const U (&data) [Dim], int bpp) noexcept
+			: val(0), bytespp(bpp) 
+		{
+			for (int i = 0; i < bpp; ++i) 
+			{
+				if constexpr (std::is_integral_v<U>)
+				{
+					raw[i] = data[i];
+				}
+				else if (std::is_floating_point_v<U>)
+				{
+					raw[i] = static_cast<unsigned char>(255.0f * data[i]);
+				}
+				
+			}
+		}
+		
 		constexpr Color(const unsigned char *p, int bpp) noexcept
 			: val(0), bytespp(bpp) 
 		{
-			for (int i=0; i<bpp; i++) {
+			for (int i = 0; i < bpp; ++i) 
+			{
 				raw[i] = p[i];
 			}
 		}
@@ -72,8 +101,9 @@ namespace TGA
 		int height;
 		int bytespp;
 	};
-
+	
 	static constexpr Color white {255, 255, 255, 255};
+	static constexpr Color black {0, 0, 0, 255};
 	static constexpr Color red {255, 0, 0, 255};
 	static constexpr Color green {0, 255, 0, 255};
 	static constexpr Color blue {0, 0, 255, 255};
