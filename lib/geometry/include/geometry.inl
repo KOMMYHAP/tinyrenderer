@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 namespace geometry
 {
 	template <class Type, size_t Dim>
@@ -13,7 +15,7 @@ namespace geometry
 	}
 
 	template <class Type, size_t Dim>
-	constexpr auto Vec<Type, Dim>::operator+ (const Vec & other) const
+	constexpr auto Vec<Type, Dim>::operator+ (const Vec & other) const noexcept
 	{
 		auto res = *this;
 		res += other;
@@ -31,7 +33,7 @@ namespace geometry
 	}
 
 	template <class Type, size_t Dim>
-	constexpr auto Vec<Type, Dim>::operator- (const Vec & other) const
+	constexpr auto Vec<Type, Dim>::operator- (const Vec & other) const noexcept
 	{
 		auto res = *this;
 		res -= other;
@@ -39,38 +41,20 @@ namespace geometry
 	}
 	
 	template <class Type, size_t Dim>
-	constexpr Vec<Type, Dim> & Vec<Type, Dim>::operator*=(const Vec & other)
+	constexpr Vec<Type, Dim> & Vec<Type, Dim>::operator*=(Type value)
 	{
 		for (size_t i = 0; i < Dim; ++i)
 		{
-			m_data[i] *= other.m_data[i];
+			m_data[i] *= value;
 		}
 		return *this;
 	}
 
 	template <class Type, size_t Dim>
-	constexpr auto Vec<Type, Dim>::operator* (const Vec & other) const
+	constexpr auto Vec<Type, Dim>::operator* (Type value) const noexcept
 	{
 		auto res = *this;
-		res *= other;
-		return res;
-	}
-	
-	template <class Type, size_t Dim>
-	constexpr Vec<Type, Dim> & Vec<Type, Dim>::operator/=(Type divisor)
-	{
-		for (size_t i = 0; i < Dim; ++i)
-		{
-			m_data[i] /= divisor;
-		}
-		return *this;
-	}
-
-	template <class Type, size_t Dim>
-	constexpr auto Vec<Type, Dim>::operator/ (Type divisor) const
-	{
-		auto res = *this;
-		res /= divisor;
+		res *= value;
 		return res;
 	}
 
@@ -82,6 +66,17 @@ namespace geometry
 			-v1[0] * v2[2] + v1[2] * v2[0],
 			 v1[0] * v2[1] - v1[1] * v2[0]
 		};
+	}
+
+	template <typename Type, size_t Dim>
+	constexpr float ScalarProduct(const Vec<Type, Dim> & v1, const Vec<Type, Dim> & v2)
+	{
+		Type result = 0;
+		for (size_t i = 0; i < Dim; ++i)
+		{
+			result += v1[i] * v2[i];
+		}
+		return result;
 	}
 
 	template <typename Type>
@@ -106,6 +101,29 @@ namespace geometry
 		u[2]  = 1.0f;
 
 		return Vec3f {1.0f - (u[0] + u[1]), u[0], u[1]};
-	};
+	}
 
+	template <typename Type, size_t Dim>
+	constexpr Vec<float, Dim> Normalize(const Vec<Type, Dim> & v)
+	{
+		float coef = 1.0f / Length(v);
+		return v * coef;
+	}
+
+	template <typename Type, size_t Dim>
+	constexpr Type LengthSqr(const Vec<Type, Dim>& v)
+	{
+		Type res = 0;
+		for (int i = 0; i < Dim; ++i)
+		{
+			res += v[i] * v[i];
+		}
+		return res;
+	}
+
+	template <typename Type, size_t Dim>
+	constexpr Type Length(const Vec<Type, Dim>& v)
+	{
+		return std::sqrt(LengthSqr(v));
+	}
 } // namespace geometry
