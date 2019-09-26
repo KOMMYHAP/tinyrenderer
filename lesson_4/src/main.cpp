@@ -79,24 +79,24 @@ int main(int argc, char ** argv)
 	int w = 1000, h = 1000;
 	TGA::Image image {w, h, 3};
 
+	auto ConvertToModelPos = [w, h](const Vec3f & v)
+	{
+		return Vec2i {
+			static_cast<int>((v.x + 1.0f) / 2 * (w - 1)),
+			static_cast<int>((v.y + 1.0f) / 2 * (h - 1))
+		};
+	};
+
 	for (auto && face : model->faces)
 	{
-		for (int i = 0; i < 3; ++i)
-		{
-			auto v0 = model->vertexes[face[i]];
-			auto v1 = model->vertexes[face[(i + 1) % 3]];
-			
-			int x0 = (v0.x + 1.0f) / 2 * (w - 1);
-			int y0 = (v0.y + 1.0f) / 2 * (h - 1);
-			int x1 = (v1.x + 1.0f) / 2 * (w - 1);
-			int y1 = (v1.y + 1.0f) / 2 * (h - 1);
-
-			DoLine(x0, y0, x1, y1, image, TGA::white);
-		}
+		auto p0 = ConvertToModelPos(model->vertexes[face[0]]);
+		auto p1 = ConvertToModelPos(model->vertexes[face[1]]);
+		auto p2 = ConvertToModelPos(model->vertexes[face[2]]);
+		DoTriangle(p0, p1, p2, image, TGA::white);
 	}
 
 	image.flip_vertically();
-	if (!image.write_tga_file("lesson_3_result.tga"))
+	if (!image.write_tga_file("lesson_4_result.tga"))
 	{
 		std::cerr << "Cannot write result tga file!" << std::endl;
 		return 1;
