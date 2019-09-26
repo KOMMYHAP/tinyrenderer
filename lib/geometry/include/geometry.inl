@@ -7,7 +7,7 @@ namespace geometry
 	{
 		for (size_t i = 0; i < Dim; ++i)
 		{
-			data[i] += other.data[i];
+			m_data[i] += other.m_data[i];
 		}
 		return *this;
 	}
@@ -25,7 +25,7 @@ namespace geometry
 	{
 		for (size_t i = 0; i < Dim; ++i)
 		{
-			data[i] -= other.data[i];
+			m_data[i] -= other.m_data[i];
 		}
 		return *this;
 	}
@@ -43,7 +43,7 @@ namespace geometry
 	{
 		for (size_t i = 0; i < Dim; ++i)
 		{
-			data[i] *= other.data[i];
+			m_data[i] *= other.m_data[i];
 		}
 		return *this;
 	}
@@ -61,7 +61,7 @@ namespace geometry
 	{
 		for (size_t i = 0; i < Dim; ++i)
 		{
-			data[i] /= divisor;
+			m_data[i] /= divisor;
 		}
 		return *this;
 	}
@@ -91,8 +91,8 @@ namespace geometry
 		auto ac = p2 - p0;
 		auto pa = p0 - p;
 
-		auto v1 = Vec3f {ab[0], ac[0], pa[0]};
-		auto v2 = Vec3f {ab[1], ac[1], pa[1]};
+		auto v1 = Vec3f {float(ab[0]), float(ac[0]), float(pa[0])};
+		auto v2 = Vec3f {float(ab[1]), float(ac[1]), float(pa[1])};
 
 		auto u = CrossProduct(v1, v2);
 

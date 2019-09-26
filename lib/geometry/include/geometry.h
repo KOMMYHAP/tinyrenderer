@@ -4,10 +4,13 @@ namespace geometry
 {
 	template <class Type, size_t Dim> struct Vec
 	{
-		Type data[Dim];
+		Type		m_data[Dim] {0};
+		size_t		m_size		{Dim};
 
-		constexpr Type operator[](size_t index) const { return data[index]; }
-		Type &	operator[](size_t index) { return data[index]; }
+		constexpr size_t size() const { return m_size; }
+
+		constexpr Type operator[](size_t index) const { return m_data[index]; }
+		Type &	operator[](size_t index) { return m_data[index]; }
 
 		constexpr Vec<Type, Dim> & operator+=(const Vec<Type, Dim> & other);
 		constexpr auto operator+ (const Vec<Type, Dim> & other) const;
