@@ -27,7 +27,7 @@ set(GEOMETRY_DIR "${LIB_DIR}/geometry")
 add_subdirectory("${GEOMETRY_DIR}")
 set_target_properties("geometry" PROPERTIES FOLDER "Libraries")
 
-# renderer
-set(RENDERER_DIR "${LIB_DIR}/renderer")
-add_subdirectory("${RENDERER_DIR}")
-set_target_properties("renderer" PROPERTIES FOLDER "Libraries")
+# painter
+set(PAINTER_DIR "${LIB_DIR}/painter")
+add_subdirectory("${PAINTER_DIR}")
+set_target_properties("painter" PROPERTIES FOLDER "Libraries")
