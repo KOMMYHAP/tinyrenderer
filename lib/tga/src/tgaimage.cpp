@@ -34,10 +34,24 @@ namespace TGA
 Image::Image() : data(NULL), width(0), height(0), bytespp(0) {
 }
 
-Image::Image(int w, int h, int bpp) : data(NULL), width(w), height(h), bytespp(bpp) {
+Image::Image(int w, int h, int bpp, Color color) 
+	: data(nullptr)
+	, width(w)
+	, height(h)
+	, bytespp(bpp) 
+{
 	unsigned long nbytes = width*height*bytespp;
 	data = new unsigned char[nbytes];
-	memset(data, 0, nbytes);
+
+	auto p = data;
+	for (unsigned long offset = 0; offset < nbytes; offset += bytespp)
+	{
+		p += bytespp;
+		for (int i = 0; i < bytespp; ++i)
+		{
+			p[i] = color.raw[i];
+		}
+	}
 }
 
 Image::Image(const Image &img) {

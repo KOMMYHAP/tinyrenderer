@@ -62,6 +62,12 @@ namespace TGA
 		}
 	};
 
+	static constexpr Color white {255, 255, 255, 255};
+	static constexpr Color black {0, 0, 0, 255};
+	static constexpr Color red {255, 0, 0, 255};
+	static constexpr Color green {0, 255, 0, 255};
+	static constexpr Color blue {0, 0, 255, 255};
+
 	class Image 
 	{
 	public:
@@ -70,7 +76,7 @@ namespace TGA
 		};
 
 		Image();
-		Image(int w, int h, int bpp);
+		Image(int w, int h, int bpp = RGB, Color = black);
 		Image(const Image &img);
 		Image & operator =(const Image &img);
 		Image(Image && img) noexcept;
@@ -101,10 +107,4 @@ namespace TGA
 		int height;
 		int bytespp;
 	};
-	
-	static constexpr Color white {255, 255, 255, 255};
-	static constexpr Color black {0, 0, 0, 255};
-	static constexpr Color red {255, 0, 0, 255};
-	static constexpr Color green {0, 255, 0, 255};
-	static constexpr Color blue {0, 0, 255, 255};
 }
