@@ -1,5 +1,4 @@
 #include "basic_defs.h"
-#include <cmath>
 #include <iostream>
 
 #include "model.h"

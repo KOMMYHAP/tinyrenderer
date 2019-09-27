@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cmath>
-
 namespace geometry
 {
 	template <class Type, size_t Dim>
