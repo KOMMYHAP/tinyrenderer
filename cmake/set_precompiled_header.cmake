@@ -1,0 +1,5 @@
+function(set_precompiled_header target header)
+	set_target_properties(${target} PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
+	set_target_properties(${target} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT ${header})
+	cotire(${target})
+endfunction(set_precompiled_header)

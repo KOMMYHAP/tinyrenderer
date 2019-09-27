@@ -1,3 +1,4 @@
+#include "basic_defs.h"
 #include "painter.h"
 
 void Painter::DoLine(int x0, int y0, int x1, int y1)

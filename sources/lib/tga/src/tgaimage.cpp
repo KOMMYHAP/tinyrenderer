@@ -1,3 +1,4 @@
+#include "basic_defs.h"
 #include <iostream>
 #include <fstream>
 #include "tgaimage.h"
