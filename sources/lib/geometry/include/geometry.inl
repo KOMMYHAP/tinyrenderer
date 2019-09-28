@@ -56,6 +56,18 @@ namespace geometry
 		return res;
 	}
 
+	template <typename Type, size_t Dim>
+	constexpr Vec<Type, Dim - 1> NarrowDim(const Vec<Type, Dim> & v)
+	{
+		static_assert(Dim > 1);
+		Vec<Type, Dim - 1> res;
+		for (int i = 0; i < Dim - 1; ++i)
+		{
+			res[i] = v[i];
+		}
+		return res;
+	}
+
 	template <typename Type>
 	constexpr Vec3f CrossProduct(const Vec<Type, 3> & v1, const Vec<Type, 3> & v2)
 	{
@@ -89,7 +101,8 @@ namespace geometry
 
 		auto u = CrossProduct(v1, v2);
 
-		if (std::abs(u[2]) < 1.0f)
+		// triangle is a degenerated, if Z component of u equals 0
+		if (std::abs(u[2]) < 0.001f)
 		{
 			return Vec3f {1.0f, 1.0f, -1.0f};
 		}

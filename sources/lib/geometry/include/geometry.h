@@ -4,6 +4,8 @@ namespace geometry
 {
 	template <class Type, size_t Dim> struct Vec
 	{
+		static_assert(Dim >= 1 && "Dimension of vector must be more or equal 1!");
+
 		Type		m_data[Dim];
 
 		constexpr size_t size() const noexcept { return Dim; }
@@ -26,6 +28,9 @@ namespace geometry
 
 	using Vec3f = Vec<float, 3>;
 	using Vec3i = Vec<int, 3>;
+
+	template <typename Type, size_t Dim>
+	constexpr Vec<Type, Dim - 1> NarrowDim(const Vec<Type, Dim> & v);
 
 	template <typename Type>
 	constexpr Vec3f ConvertToBarycentric(Vec<Type, 2> p0, Vec<Type, 2> p1, Vec<Type, 2> p2, Vec<Type, 2> p);
