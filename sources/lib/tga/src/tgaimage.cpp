@@ -47,11 +47,11 @@ Image::Image(int w, int h, int bpp, Color color)
 	auto p = data;
 	for (unsigned long offset = 0; offset < nbytes; offset += bytespp)
 	{
-		p += bytespp;
 		for (int i = 0; i < bytespp; ++i)
 		{
 			p[i] = color.raw[i];
 		}
+		p += bytespp;
 	}
 }
 
