@@ -27,7 +27,7 @@ namespace model
 	            for (int i =0;i<3;i++) iss >> v[i];
 	            model->vertexes.emplace_back(std::move(v));
 	        } else if (!line.compare(0, 2, "f ")) {
-	            std::array<int, 3> face;
+	            array<int, 3> face;
 	            int itrash;
 	            iss >> trash;
 				for (auto & index : face)

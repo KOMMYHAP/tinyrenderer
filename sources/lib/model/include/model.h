@@ -14,9 +14,9 @@ namespace model
 
 	struct Model
 	{
-		using face_t = std::array<int, 3>;
+		using face_t = array<int, 3>;
 
-		std::vector<face_t>				faces;
-		std::vector<geometry::Vec3f>	vertexes;
+		vector<face_t>				faces;
+		vector<geometry::Vec3f>	vertexes;
 	};
 }
