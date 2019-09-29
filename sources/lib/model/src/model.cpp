@@ -4,6 +4,26 @@
 #include <fstream>
 #include <sstream>
 
+namespace model::detail
+{
+	class Reader
+	{
+	public:
+		Reader(std::ifstream & ifs);
+
+		bool CanRead() const;
+		void NextLine();
+
+		bool TryReadVertexes(const string & prefix, vector<geometry::Vec3f> & output);
+		bool TryReadFace(const string & prefix, vector<Face> & output);
+
+	private:
+		std::ifstream &			m_ifstream;
+		string					m_iline;
+		std::istringstream		m_isstream;
+	};
+}
+
 namespace model
 {
 	std::optional<Model> LoadFromFile(const std::string& filename)
@@ -14,32 +34,92 @@ namespace model
 			return {};
 		}
 
-		std::string line;
 		auto model = std::make_optional<Model>();
 
-		while (!input.eof()) {
-	        std::getline(input, line);
-	        std::istringstream iss(line.c_str());
-	        char trash;
-	        if (!line.compare(0, 2, "v ")) {
-	            iss >> trash;
-	            geometry::Vec3f v;
-	            for (int i =0;i<3;i++) iss >> v[i];
-	            model->vertexes.emplace_back(std::move(v));
-	        } else if (!line.compare(0, 2, "f ")) {
-	            array<int, 3> face;
-	            int itrash;
-	            iss >> trash;
-				for (auto & index : face)
-				{
-					iss >> index >> trash >> itrash >> trash >> itrash;
-					index -= 1; // in wavefront .obj all indexes start at 1, not 0
-				}
-	            model->faces.emplace_back(std::move(face));
-	        }
+		detail::Reader reader {input};
+		while (reader.CanRead()) 
+		{
+			if (reader.TryReadVertexes("v ", model->v))
+			{
+			}
+			else if (reader.TryReadVertexes("vt ", model->vt))
+			{
+			}
+			else if (reader.TryReadVertexes("vn ", model->vn))
+			{
+			}
+			else if (reader.TryReadFace("f ", model->faces))
+			{	
+			}
+
+			reader.NextLine();
 	    }
 
-		return model;
+		if (!input.eof())
+		{
+			return {};
+		}
+
+		return std::move(model);
 	}
 
+}
+
+
+namespace model::detail
+{
+	Reader::Reader(std::ifstream& ifs)
+		: m_ifstream(ifs)
+	{
+		NextLine();
+	}
+
+	bool Reader::CanRead() const
+	{
+		return m_ifstream.good();
+	}
+
+	void Reader::NextLine()
+	{
+		std::getline(m_ifstream, m_iline);
+		m_isstream.str(m_iline);
+	}
+
+	bool Reader::TryReadVertexes(const string& prefix, vector<geometry::Vec3f>& output)
+	{
+		if (m_iline.compare(0, prefix.size(), prefix.c_str()) == 0)
+		{
+			m_isstream.seekg(prefix.size());
+            geometry::Vec3f v;
+            m_isstream >> v[0] >> v[1] >> v[2];
+            output.emplace_back(std::move(v));
+			return true;
+		}
+		return false;
+	}
+
+	bool Reader::TryReadFace(const string& prefix, vector<Face>& output)
+	{
+		if (m_iline.compare(0, prefix.size(), prefix.c_str()) == 0)
+		{
+			output.emplace_back();
+			auto & face = output.back();
+
+			m_isstream.seekg(prefix.size());
+
+            char slash;
+			for (int i = 0; i < 3; ++i)
+			{
+				m_isstream >> face.v[i] >> slash >> face.vt[i] >> slash >> face.vn[i];
+				
+				// wavefront obj file starts indexes at 1 instead of 0.
+				face.v[i] -= 1;
+				face.vt[i] -= 1;
+				face.vn[i] -= 1;
+			}
+
+			return true;
+		}
+		return false;
+	}
 }
