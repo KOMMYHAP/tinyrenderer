@@ -1,6 +1,7 @@
 #include "basic_defs.h"
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include "tgaimage.h"
 
 #pragma pack(push, 1)

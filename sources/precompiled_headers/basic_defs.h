@@ -3,12 +3,13 @@
 #include <vector>
 #include <array>
 #include <map>
-
 #include <string>
-
 #include <cmath>
-
 #include <utility>
+#include <algorithm>
+#include <memory>
+#include <type_traits>
+#include <cstddef>
 
 using std::vector;
 using std::array;

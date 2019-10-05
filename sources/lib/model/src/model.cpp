@@ -19,15 +19,15 @@ namespace model
 
 		while (!input.eof()) {
 	        std::getline(input, line);
-	        std::istringstream iss(line.c_str());
+	        std::istringstream iss(line);
 	        char trash;
 	        if (!line.compare(0, 2, "v ")) {
 	            iss >> trash;
 	            geometry::Vec3f v;
 	            for (int i =0;i<3;i++) iss >> v[i];
-	            model->vertexes.emplace_back(std::move(v));
+	            model->vertexes.emplace_back(v);
 	        } else if (!line.compare(0, 2, "f ")) {
-	            array<int, 3> face;
+	            array<int, 3> face = {};
 	            int itrash;
 	            iss >> trash;
 				for (auto & index : face)
@@ -35,7 +35,7 @@ namespace model
 					iss >> index >> trash >> itrash >> trash >> itrash;
 					index -= 1; // in wavefront .obj all indexes start at 1, not 0
 				}
-	            model->faces.emplace_back(std::move(face));
+	            model->faces.emplace_back(face);
 	        }
 	    }
 
