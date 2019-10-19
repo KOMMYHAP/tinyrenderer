@@ -1,15 +1,22 @@
 cmake_minimum_required(VERSION 3.14)
 
-# configuring compiler' and linker' flags:
-if (MSVC_VERSION GREATER_EQUAL "1900")
-    include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG("/std:c++17" _cpp_latest_flag_supported)
-    if (_cpp_latest_flag_supported)
-        add_compile_options("/std:c++17")
-    endif()
+project(TinyRenderer)
+
+# configuring compiler's and linker's flags:
+if (MSVC)
+	if (MSVC_VERSION GREATER_EQUAL "1900")
+	    include(CheckCXXCompilerFlag)
+	    CHECK_CXX_COMPILER_FLAG("/std:c++17" _cpp_latest_flag_supported)
+	    if (_cpp_latest_flag_supported)
+	        add_compile_options("/std:c++17")
+	    endif()
+	endif()
+	add_compile_options(/W4 /Zi)
+else()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+	add_compile_options(-Wall -Wextra)
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -W4 -Zi")
 set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo CACHE STRING INTERNAL FORCE)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 # ----------------------------------------

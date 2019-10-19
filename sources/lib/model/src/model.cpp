@@ -37,9 +37,10 @@ namespace model
 		auto model = std::make_optional<Model>();
 
 		detail::Reader reader {input};
+			reader.NextLine();
 		while (reader.CanRead()) 
-		{
 			if (reader.TryReadVertexes("v ", model->v))
+		{
 			{
 			}
 			else if (reader.TryReadVertexes("vt ", model->vt))
@@ -52,7 +53,6 @@ namespace model
 			{	
 			}
 
-			reader.NextLine();
 	    }
 
 		if (!input.eof())

@@ -1,13 +1,8 @@
-set(SRC 
-	"${CMAKE_CURRENT_SOURCE_DIR}/src/glad.c"
-)
+project(glad)
 
-set(HEADERS 
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/glad/glad.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/khr/khrplatform.h"
-)
+set(HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/glad/gl.h")
+set(SRCS "${CMAKE_CURRENT_SOURCE_DIR}/src/empty.cpp")
 
-add_library("glad" ${SRC} ${HEADERS})
+add_library(${PROJECT_NAME} ${SRCS} ${HEADERS})
 
-target_include_directories("glad" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_include_directories("glad" PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

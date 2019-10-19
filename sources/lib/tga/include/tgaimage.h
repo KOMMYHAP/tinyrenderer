@@ -8,9 +8,9 @@ namespace TGA
 				unsigned char b, g, r, a;
 			};
 			unsigned char raw[4];
-			unsigned int val;
+			unsigned int val = 0;
 		};
-		int bytespp;
+		int bytespp = 0;
 
 		constexpr Color() noexcept
 			: val(0), bytespp(1) 
@@ -37,7 +37,7 @@ namespace TGA
 			: val(v), bytespp(bpp) 
 		{}
 		
-		template <typename U, size_t Dim, std::enable_if_t<Dim <= 4> * = nullptr>
+		template <typename U, int Dim, std::enable_if_t<Dim <= 4> * = nullptr>
 		constexpr Color(const U (&data) [Dim]) noexcept
 			: val(0), bytespp(Dim) 
 		{
