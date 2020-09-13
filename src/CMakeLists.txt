@@ -1,11 +1,12 @@
-project("TemplateProject")
-
-add_subdirectory(libraries)
+project(tinyrenderer)
 
 add_executable(${PROJECT_NAME}
 	main.cpp
+	geometry.h
+	model.cpp
+	model.h
+	tgaimage.cpp
+	tgaimage.h
+	basicdefs.h
 )
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-	tinyrenderer
-)
+target_precompile_headers(${PROJECT_NAME} PRIVATE basicdefs.h)
