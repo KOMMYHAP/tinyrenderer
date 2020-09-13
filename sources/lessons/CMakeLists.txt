@@ -1,5 +1,0 @@
-add_subdirectory("${LESSONS_DIR}/lesson_1")
-add_subdirectory("${LESSONS_DIR}/lesson_2")
-add_subdirectory("${LESSONS_DIR}/lesson_3")
-add_subdirectory("${LESSONS_DIR}/lesson_4")
-add_subdirectory("${LESSONS_DIR}/lesson_5")
