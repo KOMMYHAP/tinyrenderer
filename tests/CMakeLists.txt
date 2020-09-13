@@ -1,0 +1,3 @@
+include(cmake_helpers/my_add_test.cmake)
+
+my_add_test(Stub SOURCES Stub.cpp)

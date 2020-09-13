@@ -1,18 +1,28 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 
 project("Tiny Renderer" LANGUAGES CXX)
 
-if (NOT WIN32)
-message(FATAL_ERROR "Unsupported platform")
-endif()
+set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
-
-set(PROJECT_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bin" CACHE STRING "Project directory")
+set(PROJECT_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bin" CACHE INTERNAL "Project directory")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_OUTPUT_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_OUTPUT_DIR}")
 
-add_subdirectory(sources)
+include(CheckIPOSupported)
+check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT IPO_CHECK_ERROR LANGUAGES CXX)
+if (IPO_SUPPORTED)
+	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+	message(STATUS "IPO/LTE is turned on.")
+else()
+	message(STATUS "IPO/LTE optimization is not supported: ${IPO_CHECK_ERROR}.")
+endif()
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT TinyRenderer)
+add_subdirectory(src)
+
+enable_testing()
+if (BUILDING_TESTING)
+	message(STATUS "${PROJECT_NAME} will perform tests.")
+	add_subdirectory(tests)
+else()
+	message(STATUS "${PROJECT_NAME} will skip tests.")
+endif()
