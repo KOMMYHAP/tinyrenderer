@@ -13,6 +13,7 @@ macro(my_add_test testName)
 	endif()
 
 	add_executable(${testName} ${MY_ADD_TEST_SOURCES})
+	set_target_properties(${testName} PROPERTIES FOLDER "Tests")
 
 	if (MY_ADD_TEST_DEPENDENCIES)
 		target_link_libraries(${testName} PRIVATE ${MY_ADD_TEST_DEPENDENCIES})

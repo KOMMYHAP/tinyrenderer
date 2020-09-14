@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cassert>
-#include <iostream>
 
 template <size_t DimCols, size_t DimRows, typename T>
 class mat;
@@ -52,6 +51,9 @@ struct vec<2, T>
 		assert(i<2);
 		return i <= 0 ? x : y;
 	}
+	
+	bool operator==(const vec & other) const { return x == other.x && y == other.y; }
+	bool operator<(const vec & other) const { return x < other.x && y < other.y; }
 
 	T x{}, y{};
 };
@@ -90,6 +92,9 @@ struct vec<3, T>
 		return *this;
 	}
 
+	bool operator==(const vec & other) const { return x == other.x && y == other.y && z == other.z; }
+	bool operator<(const vec & other) const { return x < other.x && y < other.y && z < other.z; }
+	
 	T x{}, y{}, z{};
 };
 

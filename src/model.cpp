@@ -1,10 +1,14 @@
 #include "model.h"
 
-Model::Model(string_view filename)
+bool Model::Load(string_view filename)
 {
 	ifstream in;
 	in.open(string(filename), ifstream::in);
-	if (in.fail()) return;
+	if (in.fail())
+	{
+		return false;
+	}
+	
 	string line;
 	while (!in.eof())
 	{
@@ -38,8 +42,12 @@ Model::Model(string_view filename)
 			for (int i = 0; i < 3; i++) iss >> v[i];
 		}
 	}
+	
 	std::cout
-		<< "# v# " << _vertexes.size() << std::endl
-		<< " f# " << _faces.size() << std::endl
+		<< "Loaded model data:" << '\n'
+		<< "  v# " << _vertexes.size() << '\n'
+		<< "  f# " << _faces.size() << '\n
 		<< " vt# " << _textureVertexes.size() << std::endl;
+
+	return true;
 }
