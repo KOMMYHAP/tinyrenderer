@@ -1,11 +1,5 @@
 #pragma once
 
-#include <limits>
-#include <utility>
-#include <algorithm>
-
-#include "Vector.h"
-
 namespace mymath
 {
 	template <class T>

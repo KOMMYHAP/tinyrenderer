@@ -1,8 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Vector.h"
-
+#include "Vec3.h"
 
 using namespace mymath;
 
@@ -19,7 +18,7 @@ public:
 
 	[[nodiscard]] const auto & Faces() const { return _faces; }
 	[[nodiscard]] const auto & Vertexes() const { return _vertexes; }
-	
+
 private:
 	vector<Vec3f> _vertexes;
 	vector<Vec3f> _textureVertexes;

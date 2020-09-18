@@ -1,5 +1,4 @@
-#include "BoundingBox.h"
-#include "Vector.h"
+#include "MyMath.h"
 
 using namespace mymath;
 

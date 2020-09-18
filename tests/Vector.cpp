@@ -1,4 +1,4 @@
-#include "Vector.h"
+#include "MyMath.h"
 #include <array>
 
 using namespace mymath;
@@ -32,7 +32,7 @@ int main()
 		{
 			return 1;
 		}
-		
+
 		std::array _array = {1.0f, 2.0f, 3.0f};
 	}
 

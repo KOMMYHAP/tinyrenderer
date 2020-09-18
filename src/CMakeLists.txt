@@ -15,4 +15,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE basicdefs.h)
-set_target_properties(${target} PROPERTIES FOLDER "TinyRenderer")
+set_target_properties(${target} PROPERTIES FOLDER "Application")
