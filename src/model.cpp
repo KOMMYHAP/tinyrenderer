@@ -46,7 +46,7 @@ bool Model::Load(string_view filename)
 	std::cout
 		<< "Loaded model data:" << '\n'
 		<< "  v# " << _vertexes.size() << '\n'
-		<< "  f# " << _faces.size() << '\n
+		<< "  f# " << _faces.size() << '\n'
 		<< " vt# " << _textureVertexes.size() << std::endl;
 
 	return true;

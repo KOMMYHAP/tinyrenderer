@@ -2,12 +2,15 @@
 #include "model.h"
 #include "geometry.h"
 #include "BoundingBox.h"
+#include "Vector.h"
 
 constexpr TGAColor white = TGAColor(255, 255, 255, 255);
 constexpr TGAColor red = TGAColor(255, 0, 0, 255);
 unique_ptr<Model> model;
 constexpr int width = 800;
 constexpr int height = 800;
+
+using namespace mymath;
 
 void line(int x0, int y0, int x1, int y1, TgaImage& image, TGAColor color)
 {
@@ -44,13 +47,13 @@ Vec3f barycentric(Vec3f A, Vec3f B, Vec3f C, Vec3f P)
 	Vec3f s[2];
 	for (int i = 2; i--;)
 	{
-		s[i][0] = C[i] - A[i];
-		s[i][1] = B[i] - A[i];
-		s[i][2] = A[i] - P[i];
+		s[i][0] = C[i] - A[i]; // x
+		s[i][1] = B[i] - A[i]; // y
+		s[i][2] = A[i] - P[i]; // z
 	}
-	Vec3f u = cross(s[0], s[1]);
-	if (std::abs(u[2]) > 1e-2) // dont forget that u[2] is integer. If it is zero then triangle ABC is degenerate
-		return Vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
+	// Vec3f u = cross(s[0], s[1]);
+	// if (std::abs(u[2]) > 1e-2) // dont forget that u[2] is integer. If it is zero then triangle ABC is degenerate
+		// return Vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
 	return Vec3f(-1, 1, 1); // in this case generate negative coordinates, it will be thrown away by the rasterizator
 }
 
@@ -99,7 +102,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		model->Load("../obj/african_head/african_head.obj");
+		model->Load("obj/african_head/african_head.obj");
 	}
 
 	auto zbuffer = vector<float>(width * height, std::numeric_limits<float>::min());

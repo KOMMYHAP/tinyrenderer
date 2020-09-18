@@ -4,7 +4,7 @@
 #include <utility>
 #include <algorithm>
 
-#include "geometry.h"
+#include "Vector.h"
 
 namespace mymath
 {
@@ -14,7 +14,7 @@ namespace mymath
 	public:
 		BoundingBoxT() = default;
 
-		BoundingBoxT(const vec<3, T> & pointA, const vec<3, T> & pointB, const vec<3, T> & pointC)
+		BoundingBoxT(const Vec3<T> & pointA, const Vec3<T> & pointB, const Vec3<T> & pointC)
 		{
 			auto & [min, max] = _minmax;
 			for (int i = 0; i < 3; ++i)
@@ -35,7 +35,7 @@ namespace mymath
 		inline const static Vec3f _maxPoint {_maxValue, _maxValue, _maxValue};
 		inline const static Vec3f _minPoint {_minValue, _minValue, _minValue};
 
-		std::pair<vec<3, T>, vec<3, T>>		_minmax {_maxPoint, _minPoint};
+		std::pair<Vec3<T>, Vec3<T>>		_minmax {_maxPoint, _minPoint};
 	};
 
 	using BoundingBox = BoundingBoxT<float>;

@@ -1,7 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "geometry.h"
+#include "Vector.h"
+
+
+using namespace mymath;
 
 class Model
 {

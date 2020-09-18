@@ -51,5 +51,3 @@ using std::make_unique;
 
 using std::pair;
 using std::make_pair;
-
-using std::string_view_literals::operator ""sv;
