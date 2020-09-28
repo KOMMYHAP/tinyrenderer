@@ -1,26 +1,26 @@
 #pragma once
 
-#include <iostream>
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <deque>
+#include <forward_list>
 #include <fstream>
+#include <iostream>
+#include <limits>
+#include <list>
+#include <map>
+#include <memory>
+#include <optional>
+#include <queue>
+#include <random>
+#include <set>
 #include <sstream>
-
 #include <string>
 #include <string_view>
-
-#include <bitset>
-#include <vector>
-#include <queue>
-#include <array>
-#include <map>
-#include <set>
-#include <forward_list>
-#include <list>
-#include <deque>
-
+#include <type_traits>
 #include <utility>
-#include <memory>
-#include <algorithm>
-#include <random>
+#include <vector>
 
 using std::ofstream;
 using std::ifstream;

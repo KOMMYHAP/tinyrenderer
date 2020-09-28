@@ -1,14 +1,20 @@
 #pragma once
 
-#include <assert.h>
-
-namespace mymath
+namespace Math
 {
 	template <class T>
 	struct Vec2
 	{
 		Vec2() noexcept = default;
 
+		template <class U>
+		Vec2(const Vec2<U> & vec)
+			: Vec2<T>(
+				static_cast<T>(vec.x),
+				static_cast<T>(vec.y)
+			)
+		{}
+		
 		Vec2(const T & x, const T & y) noexcept
 			: x(x), y(y)
 		{}
@@ -20,8 +26,8 @@ namespace mymath
 			: Vec2(raw.data())
 		{}
 
-		T	operator[](int i) const noexcept { assert(i < 2); return raw[i]; }
-		T &	operator[](int i)		noexcept { assert(i < 2); return raw[i]; }
+		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 2); return raw[i]; }
+		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 2); return raw[i]; }
 
 		bool operator==(const Vec2 & other) const { return equal(x, other.x) && equal(y, other.y); }
 		bool operator!=(const Vec2 & other) const { return !(*this == other); }

@@ -1,7 +1,4 @@
-#include "MyMath.h"
-#include <array>
-
-using namespace mymath;
+#include "Math.h"
 
 int main()
 {

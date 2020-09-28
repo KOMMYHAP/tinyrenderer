@@ -1,6 +1,6 @@
-#include "MyMath.h"
+#include "MathLib.h"
 
-using namespace mymath;
+using namespace Math;
 
 int main()
 {

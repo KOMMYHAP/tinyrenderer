@@ -1,14 +1,23 @@
 #pragma once
 
-#include <assert.h>
+#include <cassert>
 
-namespace mymath
+namespace Math
 {
 	template <class T>
 	struct Vec3
 	{
 		Vec3() noexcept = default;
 
+		template <class U>
+		Vec3(const Vec3<U> & other)
+			: Vec3(
+				static_cast<T>(other.x),
+				static_cast<T>(other.y),
+				static_cast<T>(other.z)
+			)
+		{}
+		
 		Vec3(const T & x, const T & y, const T & z) noexcept
 			: x(x), y(y), z(z)
 		{}

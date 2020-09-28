@@ -1,6 +1,8 @@
 #pragma once
 
-namespace mymath
+#include "Vec3.h"
+
+namespace Math
 {
 	template <class T>
 	class BoundingBoxT

@@ -1,1 +1,5 @@
-add_subdirectory(mymath)
+add_subdirectory(graphics)
+add_subdirectory(math)
+add_subdirectory(tgaimage)
+add_subdirectory(utils)
+add_subdirectory(basiclib)

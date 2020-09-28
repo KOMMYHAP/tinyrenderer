@@ -4,15 +4,14 @@ add_subdirectory(libraries)
 
 add_executable(${PROJECT_NAME}
 	main.cpp
-	model.cpp
-	model.h
-	tgaimage.cpp
-	tgaimage.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-	mymath
+	basiclib
+	graphics
+	math
+	tgaimage
+	utils
 )
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE basicdefs.h)
-set_target_properties(${target} PROPERTIES FOLDER "Application")
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Application")
