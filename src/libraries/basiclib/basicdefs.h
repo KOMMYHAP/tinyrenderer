@@ -5,15 +5,15 @@
 namespace Wusiko::Internal
 {
 	void DebugBreak();
-	void Assert(bool value, const char * file, unsigned line, const string & msg = {});
+	void Assert(const char * file, unsigned line, const string & msg = {});
 }
 
 #ifndef WUSIKO_IS_PRODUCTION
 	#define WUSIKO_ASSERT(x) \
-		Wusiko::Internal::Assert(!!(x), __FILE__, __LINE__, #x);
+		x ? ((void)0) : Wusiko::Internal::Assert(__FILE__, __LINE__, #x);
 
 	#define WUSIKO_ASSERT_MSG(x, msg) \
-		Wusiko::Internal::Assert(!!(x), __FILE__, __LINE__, msg);
+		x ? ((void)0) : Wusiko::Internal::Assert(__FILE__, __LINE__, msg);
 #else
 	#define WUSIKO_ASSERT(x) ((void)0)
 

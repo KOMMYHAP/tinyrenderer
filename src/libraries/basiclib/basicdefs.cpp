@@ -17,23 +17,19 @@ namespace Wusiko::Internal
 #pragma optimize("", on)
 	
 	void Assert(
-		[[maybe_unused]] const bool value,
 		[[maybe_unused]] const char * file,
 		[[maybe_unused]] const unsigned line,
 		[[maybe_unused]] const string & msg)
 	{
 #ifndef WUSIKO_IS_PRODUCTION
-		if (!value)
+		DebugBreak();
+		if (msg.empty())
 		{
-			DebugBreak();
-			if (msg.empty())
-			{
-				std::cerr << "Assertion failed!" << std::endl;
-			}
-			else
-			{
-				std::cerr << file << ":" << line << " " << msg << std::endl;
-			}
+			std::cerr << "Assertion failed!" << std::endl;
+		}
+		else
+		{
+			std::cerr << file << ":" << line << " " << msg << std::endl;
 		}
 #endif
 	}
