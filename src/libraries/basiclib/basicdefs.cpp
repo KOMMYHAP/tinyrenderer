@@ -32,7 +32,7 @@ namespace Wusiko::Internal
 			}
 			else
 			{
-				std::cerr << msg << std::endl;
+				std::cerr << file << ":" << line << " " << msg << std::endl;
 			}
 		}
 #endif
