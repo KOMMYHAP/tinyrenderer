@@ -21,6 +21,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+#include <cmath>
 
 using std::ofstream;
 using std::ifstream;
