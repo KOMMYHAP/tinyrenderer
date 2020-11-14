@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 	auto canvas = Graphics::Canvas(800, 600);
 	try
 	{
-		canvas.Model(std::move(model), Math::Vec3f(0, 0, 1));
+		canvas.Render(*model, Math::Vec3f(0, 0, 1));
 	}
 	catch (const std::out_of_range & e)
 	{

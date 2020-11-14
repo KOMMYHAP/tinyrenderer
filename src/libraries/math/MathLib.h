@@ -53,7 +53,7 @@ namespace Math
 	inline Vec3f barycentric(const Vec3f & A, const Vec3f & B, const Vec3f & C, const Vec3f & P)
 	{
 		Vec3f s[2];
-		for (int i = 2; i--;)
+		for (int i = 0; i < 2; ++i)
 		{
 			s[i].x = C[i] - A[i]; // x
 			s[i].y = B[i] - A[i]; // y

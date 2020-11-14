@@ -7,6 +7,14 @@
 
 namespace Graphics
 {
+	Canvas::Canvas() = default;
+
+	Canvas::Canvas(uint32_t sizeX, uint32_t sizeY)
+		: _texture(sizeX, sizeY)
+		, _zBuffer(sizeX * sizeY, -std::numeric_limits<float>::infinity())
+	{
+	}
+
 	void Canvas::Line(const Math::Vec3f & p1, const Math::Vec3f & p2, const Color& color)
 	{
 		bool steep = false;
@@ -78,7 +86,7 @@ namespace Graphics
 		// Line(p3, p1, white);
 	}
 
-	void Canvas::Model(unique_ptr<Graphics::Model> model, const Math::Vec3f & light)
+	void Canvas::Render(const Model & model, const Math::Vec3f & light)
 	{
 		const uint32_t w = Width(), h = Height();
 		if (w == 0 || h == 0)
@@ -86,13 +94,13 @@ namespace Graphics
 			return;
 		}
 
-		for (const auto & face : model->Faces())
+		for (const auto & face : model.Faces())
 		{
 			Math::Vec3f screenCoords[3];
 			Math::Vec3f worldCoords[3];
 			for (int i = 0; i < 3; i++)
 			{
-				const auto & vertex = model->Vert(face[i]);
+				const auto & vertex = model.Vertex(face.vertices[i]);
 				screenCoords[i] = {
 					(vertex.x + 1.f) / 2.f * (w - 1),
 					(vertex.y + 1.f) / 2.f * (h - 1),
@@ -104,15 +112,12 @@ namespace Graphics
 			Math::Vec3f normal = Math::CrossProduct(worldCoords[1] - worldCoords[0], worldCoords[2] - worldCoords[0]).normalize();
 			float intensity = Math::ScalarProduct(light, normal);
 
-			if (intensity > 0)
-			{
-				auto color = Color(
-					Math::lerp(0, 255, intensity),
-					Math::lerp(0, 255, intensity),
-					Math::lerp(0, 255, intensity),
-					255);
-				Triangle(screenCoords[0], screenCoords[1], screenCoords[2], color);
-			}
+			auto color = Color(
+				Math::lerp(0, 255, intensity),
+				Math::lerp(0, 255, intensity),
+				Math::lerp(0, 255, intensity),
+				255);
+			Triangle(screenCoords[0], screenCoords[1], screenCoords[2], color);
 		}
 	}
 
@@ -168,7 +173,7 @@ namespace Graphics
 				color.r,
 				color.g,
 				color.b,
-				Math::lerp(0, 255, z)
+				255 //Math::lerp(0, 255, z)
 			);
 			_texture.Set(point.x, point.y, adjustedColor);
 		}

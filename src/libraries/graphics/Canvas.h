@@ -12,18 +12,12 @@ namespace Graphics
 	class Canvas
 	{
 	public:
-		Canvas() = default;
-		Canvas(uint32_t sizeX, uint32_t sizeY)
-			: _texture(sizeX, sizeY)
-			, _zBuffer(sizeX * sizeY, -std::numeric_limits<float>::infinity())
-		{}
-		Canvas(const Math::Vec2<uint32_t> & size)
-			: Canvas(size.x, size.y)
-		{}
+		Canvas();
+		Canvas(uint32_t sizeX, uint32_t sizeY);
 
 		void Line(const Math::Vec3f & p1, const Math::Vec3f & p2, const Color & color);
 		void Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, const Color & color);
-		void Model(unique_ptr<Graphics::Model> model, const Math::Vec3f & light);
+		void Render(const Model & model, const Math::Vec3f & light);
 
 		bool WriteToTga(string_view filename) const;
 
