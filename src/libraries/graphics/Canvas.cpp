@@ -46,22 +46,20 @@ namespace Graphics
 
 	void Canvas::Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, const Color & color)
 	{
-		CheckPointIsInside(p1);
-		CheckPointIsInside(p2);
-		CheckPointIsInside(p3);
+		CheckPointIsInside(Math::Vec3u(p1));
+		CheckPointIsInside(Math::Vec3u(p2));
+		CheckPointIsInside(Math::Vec3u(p3));
 
 		auto bbox = Math::BoundingBox(p1, p2, p3);
-		const auto & [_min, _max] = bbox.MinMax();
-		
-		auto min = Math::Vec3<uint32_t>(_min);
-		auto max = Math::Vec3<uint32_t>(_max);
+		auto min = Math::Vec3u(bbox.Min());
+		auto max = Math::Vec3u(bbox.Max());
 
-		Math::Vec3<uint32_t> it;
+		Math::Vec3u it;
 		for (it.x = min[0]; it.x <= max[0]; ++it.x)
 		{
 			for (it.y = min[1]; it.y <= max[1]; ++it.y)
 			{
-				Math::Vec3f bcPoint = barycentric(p1, p2, p3, it);
+				Math::Vec3f bcPoint = barycentric(p1, p2, p3, Math::Vec3f(it));
 				if (bcPoint.x >= 0.0f && bcPoint.y >= 0.0f && bcPoint.z >= 0.0f)
 				{
 					auto p = Math::Vec3f(
@@ -74,12 +72,13 @@ namespace Graphics
 			}
 		}
 
-		// Line(p1, p2, color);
-		// Line(p2, p3, color);
-		// Line(p3, p1, color);
+		// auto white = Color(255, 255, 255, 255);
+		// Line(p1, p2, white);
+		// Line(p2, p3, white);
+		// Line(p3, p1, white);
 	}
 
-	void Canvas::Model(unique_ptr<Graphics::Model> model)
+	void Canvas::Model(unique_ptr<Graphics::Model> model, const Math::Vec3f & light)
 	{
 		const uint32_t w = Width(), h = Height();
 		if (w == 0 || h == 0)
@@ -89,20 +88,31 @@ namespace Graphics
 
 		for (const auto & face : model->Faces())
 		{
-			Math::Vec3f pts[3] = {};
+			Math::Vec3f screenCoords[3];
+			Math::Vec3f worldCoords[3];
 			for (int i = 0; i < 3; i++)
 			{
-				const auto & verteces = model->Vert(face[i]);
-				pts[i] = Math::Vec3f(
-					(verteces.x + 1.f) / 2.f * (w - 1),
-					(verteces.y + 1.f) / 2.f * (h - 1),
-					(verteces.z + 1.f) / 2.f
-				);
+				const auto & vertex = model->Vert(face[i]);
+				screenCoords[i] = {
+					(vertex.x + 1.f) / 2.f * (w - 1),
+					(vertex.y + 1.f) / 2.f * (h - 1),
+					(vertex.z + 1.f) / 2.f,
+				};
+				worldCoords[i] = vertex;
 			}
 
-			// auto color = Color(rand() % 255, rand() % 255, rand() % 255, 255);
-			auto color = Color(51, 34, 3, 255);
-			Triangle(pts[0], pts[1], pts[2], color);
+			Math::Vec3f normal = Math::CrossProduct(worldCoords[1] - worldCoords[0], worldCoords[2] - worldCoords[0]).normalize();
+			float intensity = Math::ScalarProduct(light, normal);
+
+			if (intensity > 0)
+			{
+				auto color = Color(
+					Math::lerp(0, 255, intensity),
+					Math::lerp(0, 255, intensity),
+					Math::lerp(0, 255, intensity),
+					255);
+				Triangle(screenCoords[0], screenCoords[1], screenCoords[2], color);
+			}
 		}
 	}
 
@@ -138,7 +148,7 @@ namespace Graphics
 		return image.WriteTgaFile(filename.data());
 	}
 
-	void Canvas::CheckPointIsInside(const Math::Vec3<uint32_t>& p)
+	void Canvas::CheckPointIsInside(const Math::Vec3u& p)
 	{
 		if (p.x >= Width() || p.y >= Height())
 		{

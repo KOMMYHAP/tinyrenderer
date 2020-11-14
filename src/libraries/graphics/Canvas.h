@@ -23,7 +23,7 @@ namespace Graphics
 
 		void Line(const Math::Vec3f & p1, const Math::Vec3f & p2, const Color & color);
 		void Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, const Color & color);
-		void Model(unique_ptr<Graphics::Model> model);
+		void Model(unique_ptr<Graphics::Model> model, const Math::Vec3f & light);
 
 		bool WriteToTga(string_view filename) const;
 
@@ -31,7 +31,7 @@ namespace Graphics
 		uint32_t Height() const { return _texture.Height(); }
 
 	private:
-		void CheckPointIsInside(const Math::Vec3<uint32_t>& p);
+		void CheckPointIsInside(const Math::Vec3u& p);
 		void TrySet(const Math::Vec3f & point, const Color & color);
 
 		Texture				_texture;

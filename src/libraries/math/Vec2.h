@@ -26,21 +26,32 @@ namespace Math
 			: Vec2(raw.data())
 		{}
 
-		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 2); return raw[i]; }
-		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 2); return raw[i]; }
+		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 2); return *((&x) + i); }
+		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 2); return *((&x) + i); }
 
-		bool operator==(const Vec2 & other) const { return equal(x, other.x) && equal(y, other.y); }
+		bool operator==(const Vec2 & other) const { return x == other.x && y == other.y; }
 		bool operator!=(const Vec2 & other) const { return !(*this == other); }
 
-		union
-		{
-			struct
-			{
-				T x, y;
-			};
-			T raw[2] = {};
-		};
+		T x, y;
 	};
+
+	template <class T>
+	Vec2<T> operator+(const Vec2<T> & a, const Vec2<T> &b)
+	{
+		return {a.x + b.x, a.y + b.y};
+	}
+
+	template <class T>
+	Vec2<T> operator-(const Vec2<T> & a, const Vec2<T> &b)
+	{
+		return {a.x - b.x, a.y - b.y};
+	}
+
+	template <class T>
+	T ScalarProduct(const Vec2<T> & a, const Vec2<T> & b)
+	{
+		return {a.x * b.x + a.y * b.y};
+	}
 
 	using Vec2f = Vec2<float>;
 	using Vec2d = Vec2<double>;

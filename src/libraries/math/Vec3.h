@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 namespace Math
 {
 	template <class T>
@@ -10,7 +8,7 @@ namespace Math
 		Vec3() noexcept = default;
 
 		template <class U>
-		Vec3(const Vec3<U> & other)
+		explicit Vec3(const Vec3<U> & other)
 			: Vec3(
 				static_cast<T>(other.x),
 				static_cast<T>(other.y),
@@ -22,32 +20,64 @@ namespace Math
 			: x(x), y(y), z(z)
 		{}
 
-		Vec3(const T * raw) noexcept
+		Vec3(const T (&raw)[3]) noexcept
 			: Vec3(raw[0], raw[1], raw[2])
 		{}
 
-		Vec3(const std::array<T, 3> raw) noexcept
-			: Vec3(raw.data())
+		Vec3(const std::array<T, 3> & raw) noexcept
+			: Vec3(raw[0], raw[1], raw[2])
 		{}
 
-		T	operator[](int i) const noexcept { assert(i < 3); return raw[i]; }
-		T &	operator[](int i)		noexcept { assert(i < 3); return raw[i]; }
-
-		bool operator==(const Vec3 & other) const { return equal(x, other.x) && equal(y, other.y) && equal(z, other.z); }
+		Vec3 & normalize()
+		{
+			float n = std::sqrt(x * x + y * y + z * z);
+			x /= n;
+			y /= n;
+			z /= n;
+			return *this;
+		}
+		
+		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 3); return *((&x) + i); }
+		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 3); return *((&x) + i); }
+		
+		bool operator==(const Vec3 & other) const { return x == other.x && y == other.y && z == other.z; }
 		bool operator!=(const Vec3 & other) const { return !(*this == other); }
 
-		union
-		{
-			struct
-			{
-				T x, y, z;
-			};
-			T raw[3] = {};
-		};
+		T x, y, z;
 	};
+
+	template <class T>
+	Vec3<T> operator+(const Vec3<T> & a, const Vec3<T> &b)
+	{
+		return {a.x + b.x, a.y + b.y, a.z + b.z};
+	}
+
+	template <class T>
+	Vec3<T> operator-(const Vec3<T> & a, const Vec3<T> &b)
+	{
+		return {a.x - b.x, a.y - b.y, a.z - b.z};
+	}
+
+	template <class T>
+	T ScalarProduct(const Vec3<T> & a, const Vec3<T> & b)
+	{
+		return {a.x * b.x + a.y * b.y + a.z * b.z};
+	}
+
+	template <class T>
+	Vec3<T> CrossProduct(const Vec3<T> & a, const Vec3<T> & b)
+	{
+		return {
+			a.y * b.z - a.z * b.y,
+			a.z * b.x - a.x * b.z,
+			a.x * b.y - a.y * b.x
+		};
+	}
 
 	using Vec3f = Vec3<float>;
 	using Vec3d = Vec3<double>;
 	using Vec3i = Vec3<int32_t>;
+	using Vec3u = Vec3<uint32_t>;
 	using Vec3l = Vec3<int64_t>;
+	using Vec3ul = Vec3<uint64_t>;
 }

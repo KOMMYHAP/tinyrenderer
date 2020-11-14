@@ -3,8 +3,6 @@
 
 int main(int argc, char** argv)
 {
-	WUSIKO_ASSERT(false);
-	
 	auto model = make_unique<Graphics::Model>();
 	string_view objectFile;
 	if (argc == 2)
@@ -13,7 +11,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		objectFile = "obj/african_head/african_head.obj";
+		objectFile = "../resources/african_head/african_head.obj";
 	}
 
 	if (!model->Load(objectFile))
@@ -25,7 +23,7 @@ int main(int argc, char** argv)
 	auto canvas = Graphics::Canvas(800, 600);
 	try
 	{
-		canvas.Model(std::move(model));
+		canvas.Model(std::move(model), Math::Vec3f(0, 0, 1));
 	}
 	catch (const std::out_of_range & e)
 	{
