@@ -29,16 +29,6 @@ namespace Math
 	}
 
 	template <class T>
-	Vec3<T> cross(const Vec3<T> & left, const Vec3<T> & right)
-	{
-		return Vec3<T>(
-			left.y * right.z - left.z * right.y,
-			left.z * right.x - left.x * right.z,
-			left.x * right.y - left.y * right.x
-		);
-	}
-
-	template <class T>
 	Vec3<T> vec_upcast(const Vec2<T> & vec)
 	{
 		return Vec3<T>(vec.x, vec.y, T{});
@@ -60,7 +50,7 @@ namespace Math
 			s[i].z = A[i] - P[i]; // z
 		}
 
-		Vec3f u = cross(s[0], s[1]);
+		Vec3f u = CrossProduct(s[0], s[1]);
 		if (std::abs(u.z) > 1e-2)
 		{
 			return Vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
