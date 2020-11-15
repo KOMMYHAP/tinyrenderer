@@ -24,8 +24,8 @@ namespace Graphics
 
 		Color& Get(uint32_t x, uint32_t y);
 
-		const PixelsRow & operator[](uint32_t y) const { assert(y < _rows.size()); return _rows[y]; }
-		PixelsRow & operator[](uint32_t y) { assert(y < _rows.size()); return _rows[y]; }
+		const PixelsRow & operator[](uint32_t y) const { WUSIKO_ASSERT(y < _rows.size()); return _rows[y]; }
+		PixelsRow & operator[](uint32_t y) { WUSIKO_ASSERT(y < _rows.size()); return _rows[y]; }
 
 		uint32_t Width() const { return !_rows.empty() ? _rows[0].Length() : 0; }
 		uint32_t Height() const { return _rows.size(); }
