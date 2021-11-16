@@ -15,8 +15,8 @@ namespace Graphics
 		const Color & Get(uint32_t x) const;
 		Color & Get(uint32_t x);
 
-		const Color & operator[](uint32_t x) const { assert(x < _pixels.size()); return _pixels[x]; }
-		Color & operator[](uint32_t x) { assert(x < _pixels.size()); return _pixels[x]; }
+		const Color & operator[](uint32_t x) const { WUSIKO_ASSERT(x < _pixels.size()); return _pixels[x]; }
+		Color & operator[](uint32_t x) { WUSIKO_ASSERT(x < _pixels.size()); return _pixels[x]; }
 
 		uint32_t Length() const { return _pixels.size(); }
 

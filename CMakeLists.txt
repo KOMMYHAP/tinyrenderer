@@ -20,9 +20,9 @@ endif()
 
 add_subdirectory(src)
 
-enable_testing()
 if (BUILDING_TESTING)
 	message(STATUS "${PROJECT_NAME} will perform tests.")
+	enable_testing()
 	add_subdirectory(tests)
 else()
 	message(STATUS "${PROJECT_NAME} will skip tests.")

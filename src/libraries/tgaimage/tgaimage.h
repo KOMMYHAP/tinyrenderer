@@ -23,12 +23,12 @@ struct TGAColor
 	array<unsigned char, 4> bgra{};
 	unsigned char bytespp;
 
-	constexpr TGAColor()
+	TGAColor()
 		: bytespp(1)
 	{
 	}
 
-	constexpr TGAColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A = 255)
+	TGAColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A = 255)
 		: bytespp(4)
 	{
 		bgra[0] = B;
@@ -37,14 +37,14 @@ struct TGAColor
 		bgra[3] = A;
 	}
 
-	constexpr TGAColor(unsigned char v)
+	TGAColor(unsigned char v)
 		: bytespp(1)
 	{
 		bgra[0] = v;
 	}
 
 
-	constexpr TGAColor(const unsigned char* p, unsigned char bpp)
+	TGAColor(const unsigned char* p, unsigned char bpp)
 		: bytespp(bpp)
 	{
 		for (int i = 0; i < static_cast<int>(bpp); i++)
@@ -57,9 +57,9 @@ struct TGAColor
 		}
 	}
 
-	constexpr unsigned char& operator[](const int i) { return bgra[i]; }
+	unsigned char& operator[](const int i) { return bgra[i]; }
 
-	constexpr TGAColor operator *(float intensity) const
+	TGAColor operator *(float intensity) const
 	{
 		TGAColor res = *this;
 		intensity = (intensity > 1.f ? 1.f : (intensity < 0.f ? 0.f : intensity));

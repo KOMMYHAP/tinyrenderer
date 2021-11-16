@@ -26,8 +26,8 @@ namespace Math
 			: Vec2(raw.data())
 		{}
 
-		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 2); return *((&x) + i); }
-		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 2); return *((&x) + i); }
+		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 2); return *(&x + i); }
+		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 2); return *(&x + i); }
 
 		bool operator==(const Vec2 & other) const { return x == other.x && y == other.y; }
 		bool operator!=(const Vec2 & other) const { return !(*this == other); }
@@ -54,6 +54,7 @@ namespace Math
 	}
 
 	using Vec2f = Vec2<float>;
+	using Vec2u = Vec2<uint32_t>;
 	using Vec2d = Vec2<double>;
 	using Vec2i = Vec2<int32_t>;
 	using Vec2l = Vec2<int64_t>;

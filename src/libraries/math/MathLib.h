@@ -57,7 +57,7 @@ namespace Math
 		}
 		return Vec3f(-1, -1, -1);
 	}
-
+	
 	template <class T>
 	T lerp(const T & a, const T & b, float t)
 	{

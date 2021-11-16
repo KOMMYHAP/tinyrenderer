@@ -60,13 +60,24 @@ namespace Graphics
 					return false;
 				}
 			}
+			else if (!line.compare(0, 3, "vn "))
+			{
+				auto & normal = _normals.emplace_back();
+				int read = std::sscanf(line.c_str(), "vn %f %f %f\n", &normal.x, &normal.y, &normal.z);
+				if (read != 3)
+				{
+					std::cerr << "Specified .OBJ file contains unsupported format of normal (only \"vn %f %f %f\" supported)!" << std::endl;
+					return false;
+				}
+			}
 		}
 
 		std::cout
 			<< "Loaded model data:" << '\n'
 			<< "  v# " << _vertexes.size() << '\n'
 			<< "  f# " << _faces.size() << '\n'
-			<< " vt# " << _textureVertexes.size() << std::endl;
+			<< " vt# " << _textureVertexes.size() << '\n'
+			<< " vn# " << _normals.size() << std::endl;
 
 		return true;
 	}

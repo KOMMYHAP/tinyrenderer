@@ -3,25 +3,22 @@
 #include "Vec2.h"
 #include "PixelsRow.h"
 
+class TgaImage;
+
 namespace Graphics
 {
 	class Texture
 	{
 	public:
-		Texture() = default;
+		static Texture From(const TgaImage & image);
 
-		Texture(uint32_t sizeX, uint32_t sizeY)
-			: _rows(sizeY, PixelsRow(sizeX))
-		{}
-
-		explicit Texture(Math::Vec2<uint32_t> size)
-			: Texture(size.x, size.y)
-		{}
+		Texture();
+		Texture(uint32_t sizeX, uint32_t sizeY);
+		explicit Texture(Math::Vec2<uint32_t> size);
 
 		void Set(uint32_t x, uint32_t y, Color color);
 
 		const Color& Get(uint32_t x, uint32_t y) const;
-
 		Color& Get(uint32_t x, uint32_t y);
 
 		const PixelsRow & operator[](uint32_t y) const { WUSIKO_ASSERT(y < _rows.size()); return _rows[y]; }

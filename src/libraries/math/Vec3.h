@@ -37,13 +37,15 @@ namespace Math
 			return *this;
 		}
 		
-		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 3); return *((&x) + i); }
-		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 3); return *((&x) + i); }
+		T	operator[](int i) const noexcept { WUSIKO_ASSERT(i < 3); return *(&x + i); }
+		T &	operator[](int i)		noexcept { WUSIKO_ASSERT(i < 3); return *(&x + i); }
 		
 		bool operator==(const Vec3 & other) const { return x == other.x && y == other.y && z == other.z; }
 		bool operator!=(const Vec3 & other) const { return !(*this == other); }
 
-		T x, y, z;
+		T x = {};
+		T y = {};
+		T z = {};
 	};
 
 	template <class T>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "Color.h"
 #include "Texture.h"
 #include "Vec2.h"
@@ -17,7 +19,14 @@ namespace Graphics
 
 		void Line(const Math::Vec3f & p1, const Math::Vec3f & p2, const Color & color);
 		void Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, const Color & color);
-		void Render(const Model & model, const Math::Vec3f & light);
+
+		struct ColorContext
+		{
+			Math::Vec2f		t;
+		};
+		using ColorFunction = std::function<Color(const ColorContext &)>;
+		void Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, ColorFunction colorFunction);
+		void Render(const Model & model, const Texture & diffuseTexture, const Math::Vec3f & light);
 
 		bool WriteToTga(string_view filename) const;
 
@@ -27,6 +36,7 @@ namespace Graphics
 	private:
 		void CheckPointIsInside(const Math::Vec3u& p);
 		void TrySet(const Math::Vec3f & point, const Color & color);
+		Color GetDiffuseColor(const Texture & diffuseTexture, float u, float v);
 
 		Texture				_texture;
 		vector<float>		_zBuffer;

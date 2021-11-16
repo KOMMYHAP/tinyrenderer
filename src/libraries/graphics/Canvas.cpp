@@ -54,9 +54,22 @@ namespace Graphics
 
 	void Canvas::Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, const Color & color)
 	{
+		ColorFunction getColor = [&color](const ColorContext &)
+		{
+			return color;
+		};
+		Triangle(p1, p2, p3, getColor);
+	}
+
+	void Canvas::Triangle(const Math::Vec3f& p1, const Math::Vec3f& p2, const Math::Vec3f& p3, ColorFunction colorFunction)
+	{
 		CheckPointIsInside(Math::Vec3u(p1));
 		CheckPointIsInside(Math::Vec3u(p2));
 		CheckPointIsInside(Math::Vec3u(p3));
+		if (!colorFunction)
+		{
+			return;
+		}
 
 		auto bbox = Math::BoundingBox(p1, p2, p3);
 		auto min = Math::Vec3u(bbox.Min());
@@ -75,22 +88,30 @@ namespace Graphics
 						it.y,
 						p1.z * bcPoint.x + p2.z * bcPoint.y + p3.z * bcPoint.z
 					);
+
+					ColorContext context;
+					context.t = {(it.x - min[0]) / static_cast<float>(max[0] - min[0]), (it.y - min[1]) / static_cast<float>(max[1] - min[1])};
+					auto color = colorFunction(context);
 					TrySet(p, color);
 				}
 			}
 		}
-
-		// auto white = Color(255, 255, 255, 255);
-		// Line(p1, p2, white);
-		// Line(p2, p3, white);
-		// Line(p3, p1, white);
 	}
 
-	void Canvas::Render(const Model & model, const Math::Vec3f & light)
+	void Canvas::Render(const Model & model, const Texture & diffuseTexture, const Math::Vec3f & light)
 	{
 		const uint32_t w = Width(), h = Height();
 		if (w == 0 || h == 0)
 		{
+			std::cerr << "Canvas is not initialized." << std::endl;
+			return;
+		}
+
+		const bool diffuseTextureDisabled = diffuseTexture.Height() == 0 || diffuseTexture.Width() == 0;
+
+		if (light.x > 1.0f || light.y > 1.0f || light.z > 1.0f)
+		{
+			std::cerr << "Light must be a normilized vector." << std::endl;
 			return;
 		}
 
@@ -110,14 +131,38 @@ namespace Graphics
 			}
 
 			Math::Vec3f normal = Math::CrossProduct(worldCoords[1] - worldCoords[0], worldCoords[2] - worldCoords[0]).normalize();
-			float intensity = Math::ScalarProduct(light, normal);
+			const float intensity = Math::ScalarProduct(light, normal);
 
-			auto color = Color(
-				Math::lerp(0, 255, intensity),
-				Math::lerp(0, 255, intensity),
-				Math::lerp(0, 255, intensity),
-				255);
-			Triangle(screenCoords[0], screenCoords[1], screenCoords[2], color);
+			if (diffuseTextureDisabled)
+			{
+				const auto color = Color(
+					Math::lerp(0, 255, intensity),
+					Math::lerp(0, 255, intensity),
+					Math::lerp(0, 255, intensity),
+					255);
+				Triangle(screenCoords[0], screenCoords[1], screenCoords[2], color);
+			}
+			else
+			{
+				auto tv0 = face.textureVertices[0];
+				auto tv1 = face.textureVertices[1];
+				auto tv2 = face.textureVertices[2];
+				auto bbox = Math::BoundingBoxT(model.TextureVertex(tv0), model.TextureVertex(tv1), model.TextureVertex(tv2));
+				
+				ColorFunction getColor = [&](const ColorContext & context)
+				{
+					const float u = Math::lerp(bbox.Min().x, bbox.Max().x, context.t.x);
+					const float v = Math::lerp(bbox.Min().y, bbox.Max().y, context.t.y);
+					auto color = GetDiffuseColor(diffuseTexture, u, v);
+					color.a *= intensity;
+					color.r *= intensity;
+					color.g *= intensity;
+					color.b *= intensity;
+					return color;
+				};
+				
+				Triangle(screenCoords[0], screenCoords[1], screenCoords[2], getColor);
+			}
 		}
 	}
 
@@ -177,5 +222,23 @@ namespace Graphics
 			);
 			_texture.Set(point.x, point.y, adjustedColor);
 		}
+	}
+
+	Color Canvas::GetDiffuseColor(const Texture& diffuseTexture, float u, float v)
+	{
+		const int w = diffuseTexture.Width();
+		const int h = diffuseTexture.Height();
+		if (w == 0 || h == 0)
+		{
+			return {};
+		}
+
+		const int x = static_cast<int>(w * u);
+		const int y = static_cast<int>(h * v);
+		if (x < w && y < h)
+		{
+			return diffuseTexture.Get(x, y);
+		}
+		return {};
 	}
 }
