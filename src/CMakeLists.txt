@@ -8,10 +8,8 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	basiclib
-	graphics
-	math
+	render
 	tgaimage
-	utils
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Application")

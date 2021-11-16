@@ -1,23 +1,25 @@
-project(graphics)
+project(render)
 
 add_library(${PROJECT_NAME} STATIC
+	BoundingBox.h
 	Canvas.cpp
 	Canvas.h
-	Texture.h
-	Texture.cpp
 	Color.h
+	geometry.cpp
+	geometry.h
 	Model.cpp
 	Model.h
-	PixelsRow.h
 	PixelsRow.cpp
-	TextureView.h
-	TextureView.cpp
+	PixelsRow.h
+	Texture.cpp
+	Texture.h
+	Utils.cpp
+	Utils.h
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME}
 	PUBLIC
-		math
 		tgaimage
 	PRIVATE
 		basiclib

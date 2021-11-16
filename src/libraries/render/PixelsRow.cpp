@@ -9,7 +9,7 @@ namespace Graphics
 		{
 			return _pixels[x];
 		}
-		Utils::OutOfRange("Cannot get pixel by specified index " + std::to_string(x) + "!");
+		throw std::out_of_range("Cannot get pixel by specified index " + std::to_string(x) + "!");
 	}
 
 	Color & PixelsRow::Get(uint32_t x)
@@ -18,6 +18,6 @@ namespace Graphics
 		{
 			return _pixels[x];
 		}
-		Utils::OutOfRange("Cannot get pixel by specified index " + std::to_string(x) + "!");
+		throw std::out_of_range("Cannot get pixel by specified index " + std::to_string(x) + "!");
 	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec2.h"
+#include "geometry.h"
 #include "PixelsRow.h"
 
 class TgaImage;
@@ -14,7 +14,7 @@ namespace Graphics
 
 		Texture();
 		Texture(uint32_t sizeX, uint32_t sizeY);
-		explicit Texture(Math::Vec2<uint32_t> size);
+		explicit Texture(vec2 size);
 
 		void Set(uint32_t x, uint32_t y, Color color);
 

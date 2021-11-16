@@ -1,5 +1,8 @@
 #include "tgaimage.h"
 
+#include <fstream>
+#include <iostream>
+
 TgaImage::TgaImage(int w, int h, int bpp)
 	: _width(w)
 	, _height(h)
@@ -10,7 +13,7 @@ TgaImage::TgaImage(int w, int h, int bpp)
 
 bool TgaImage::ReadTgaFile(const char* filename)
 {
-	ifstream in;
+	std::ifstream in;
 	in.open(filename, std::ios::binary);
 	if (!in.is_open())
 	{
@@ -78,7 +81,7 @@ bool TgaImage::ReadTgaFile(const char* filename)
 	return true;
 }
 
-bool TgaImage::load_rle_data(ifstream& in)
+bool TgaImage::load_rle_data(std::ifstream& in)
 {
 	unsigned long pixelcount = _width * _height;
 	unsigned long currentpixel = 0;
@@ -143,9 +146,9 @@ bool TgaImage::WriteTgaFile(const char* filename, bool rle) const
 {
 	unsigned char developer_area_ref[4] = {0, 0, 0, 0};
 	unsigned char extension_area_ref[4] = {0, 0, 0, 0};
-	string_view footer = "TRUEVISION-XFILE.";
+	std::string_view footer = "TRUEVISION-XFILE.";
 
-	ofstream out;
+	std::ofstream out;
 	out.open(filename, std::ios::binary);
 	if (!out.is_open())
 	{
@@ -212,7 +215,7 @@ bool TgaImage::WriteTgaFile(const char* filename, bool rle) const
 }
 
 // TODO: it is not necessary to break a raw chunk for two equal pixels (for the matter of the resulting size)
-bool TgaImage::unload_rle_data(ofstream& out) const
+bool TgaImage::unload_rle_data(std::ofstream& out) const
 {
 	const unsigned char max_chunk_length = 128;
 	unsigned long npixels = _width * _height;

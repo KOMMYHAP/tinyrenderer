@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "geometry.h"
 #include "model.h"
 #include "tgaimage.h"
 
@@ -36,9 +37,9 @@ int main(int argc, char** argv)
 	auto canvas = Graphics::Canvas(800, 600);
 	try
 	{
-		canvas.Render(*model, diffuseTexture, Math::Vec3f(0, 0, 1));
+		canvas.Render(*model, diffuseTexture, vec3(0, 0, 1));
 	}
-	catch (const std::out_of_range & e)
+	catch (const std::exception & e)
 	{
 		std::cerr << "Specified model is corrupted! Details: " << e.what() << std::endl;
 	}

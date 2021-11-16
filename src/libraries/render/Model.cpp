@@ -45,7 +45,7 @@ namespace Graphics
 				}
 
 				// in wavefront obj all indices start at 1, not zero
-				auto indicesOffset = Math::Vec3u(1, 1, 1);
+				auto indicesOffset = vec3(1, 1, 1);
 				v = v - indicesOffset;
 				vt = vt - indicesOffset;
 				vn = vn - indicesOffset;

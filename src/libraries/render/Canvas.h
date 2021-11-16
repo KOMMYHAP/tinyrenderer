@@ -3,9 +3,8 @@
 #include <functional>
 
 #include "Color.h"
+#include "geometry.h"
 #include "Texture.h"
-#include "Vec2.h"
-#include "Vec3.h"
 
 namespace Graphics
 {
@@ -17,16 +16,16 @@ namespace Graphics
 		Canvas();
 		Canvas(uint32_t sizeX, uint32_t sizeY);
 
-		void Line(const Math::Vec3f & p1, const Math::Vec3f & p2, const Color & color);
-		void Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, const Color & color);
+		void Line(const vec3 & p1, const vec3 & p2, const Color & color);
+		void Triangle(const vec3 & p1, const vec3 & p2, const vec3 & p3, const Color & color);
 
 		struct ColorContext
 		{
-			Math::Vec2f		t;
+			vec2		t;
 		};
 		using ColorFunction = std::function<Color(const ColorContext &)>;
-		void Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, ColorFunction colorFunction);
-		void Render(const Model & model, const Texture & diffuseTexture, const Math::Vec3f & light);
+		void Triangle(const vec3 & p1, const vec3 & p2, const vec3 & p3, ColorFunction colorFunction);
+		void Render(const Model & model, const Texture & diffuseTexture, const vec3 & light);
 
 		bool WriteToTga(string_view filename) const;
 
@@ -34,8 +33,8 @@ namespace Graphics
 		uint32_t Height() const { return _texture.Height(); }
 
 	private:
-		void CheckPointIsInside(const Math::Vec3u& p);
-		void TrySet(const Math::Vec3f & point, const Color & color);
+		void CheckPointIsInside(const vec3& p);
+		void TrySet(const vec3 & point, const Color & color);
 		Color GetDiffuseColor(const Texture & diffuseTexture, float u, float v);
 
 		Texture				_texture;

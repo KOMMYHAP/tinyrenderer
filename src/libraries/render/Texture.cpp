@@ -1,7 +1,7 @@
 #include "Texture.h"
 
-#include <Utils.h>
 
+#include "geometry.h"
 #include "tgaimage.h"
 
 namespace Graphics
@@ -31,7 +31,7 @@ namespace Graphics
 		: _rows(sizeY, PixelsRow(sizeX))
 	{}
 	
-	Texture::Texture(Math::Vec2<uint32_t> size)
+	Texture::Texture(vec2 size)
 		: Texture(size.x, size.y)
 	{
 	}
@@ -47,7 +47,7 @@ namespace Graphics
 		{
 			return _rows[y][x];
 		}
-		Utils::OutOfRange("Cannot get pixel by specified index " + std::to_string(x) + " " + std::to_string(y) + "!");
+		throw std::out_of_range("Cannot get pixel by specified index " + std::to_string(x) + " " + std::to_string(y) + "!");
 	}
 
 	Color& Texture::Get(uint32_t x, uint32_t y)
@@ -56,6 +56,6 @@ namespace Graphics
 		{
 			return _rows[y].Get(x);
 		}
-		Utils::OutOfRange("Cannot get pixel by specified index " + std::to_string(x) + " " + std::to_string(y) + "!");
+		throw std::out_of_range("Cannot get pixel by specified index " + std::to_string(x) + " " + std::to_string(y) + "!");
 	}
 }

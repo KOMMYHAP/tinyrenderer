@@ -1,9 +1,11 @@
 #include "Canvas.h"
 
+
+#include "BoundingBox.h"
 #include "Model.h"
-#include "MathLib.h"
-#include "Utils.h"
+#include "geometry.h"
 #include "tgaimage.h"
+#include "Utils.h"
 
 namespace Graphics
 {
@@ -15,7 +17,7 @@ namespace Graphics
 	{
 	}
 
-	void Canvas::Line(const Math::Vec3f & p1, const Math::Vec3f & p2, const Color& color)
+	void Canvas::Line(const vec3 & p1, const vec3 & p2, const Color& color)
 	{
 		bool steep = false;
 		int32_t x0 = p1.x, x1 = p2.x;
@@ -40,7 +42,7 @@ namespace Graphics
 			{
 				t = static_cast<float>(x - x0) / static_cast<float>(x1 - x0);
 			}
-			uint32_t y = static_cast<uint32_t>(Math::lerp(y0, y1, t));
+			uint32_t y = static_cast<uint32_t>(Utils::lerp(y0, y1, t));
 			if (steep)
 			{
 				_texture.Set(y, x, color);
@@ -52,7 +54,7 @@ namespace Graphics
 		}
 	}
 
-	void Canvas::Triangle(const Math::Vec3f & p1, const Math::Vec3f & p2, const Math::Vec3f & p3, const Color & color)
+	void Canvas::Triangle(const vec3 & p1, const vec3 & p2, const vec3 & p3, const Color & color)
 	{
 		ColorFunction getColor = [&color](const ColorContext &)
 		{
@@ -61,29 +63,29 @@ namespace Graphics
 		Triangle(p1, p2, p3, getColor);
 	}
 
-	void Canvas::Triangle(const Math::Vec3f& p1, const Math::Vec3f& p2, const Math::Vec3f& p3, ColorFunction colorFunction)
+	void Canvas::Triangle(const vec3& p1, const vec3& p2, const vec3& p3, ColorFunction colorFunction)
 	{
-		CheckPointIsInside(Math::Vec3u(p1));
-		CheckPointIsInside(Math::Vec3u(p2));
-		CheckPointIsInside(Math::Vec3u(p3));
+		CheckPointIsInside(vec3(p1));
+		CheckPointIsInside(vec3(p2));
+		CheckPointIsInside(vec3(p3));
 		if (!colorFunction)
 		{
 			return;
 		}
 
-		auto bbox = Math::BoundingBox(p1, p2, p3);
-		auto min = Math::Vec3u(bbox.Min());
-		auto max = Math::Vec3u(bbox.Max());
+		auto bbox = Utils::BoundingBox(p1, p2, p3);
+		auto min = vec3(bbox.Min());
+		auto max = vec3(bbox.Max());
 
-		Math::Vec3u it;
+		vec3 it;
 		for (it.x = min[0]; it.x <= max[0]; ++it.x)
 		{
 			for (it.y = min[1]; it.y <= max[1]; ++it.y)
 			{
-				Math::Vec3f bcPoint = barycentric(p1, p2, p3, Math::Vec3f(it));
+				vec3 bcPoint = Utils::barycentric(p1, p2, p3, vec3(it));
 				if (bcPoint.x >= 0.0f && bcPoint.y >= 0.0f && bcPoint.z >= 0.0f)
 				{
-					auto p = Math::Vec3f(
+					auto p = vec3(
 						it.x,
 						it.y,
 						p1.z * bcPoint.x + p2.z * bcPoint.y + p3.z * bcPoint.z
@@ -98,7 +100,7 @@ namespace Graphics
 		}
 	}
 
-	void Canvas::Render(const Model & model, const Texture & diffuseTexture, const Math::Vec3f & light)
+	void Canvas::Render(const Model & model, const Texture & diffuseTexture, const vec3 & light)
 	{
 		const uint32_t w = Width(), h = Height();
 		if (w == 0 || h == 0)
@@ -117,8 +119,8 @@ namespace Graphics
 
 		for (const auto & face : model.Faces())
 		{
-			Math::Vec3f screenCoords[3];
-			Math::Vec3f worldCoords[3];
+			vec3 screenCoords[3];
+			vec3 worldCoords[3];
 			for (int i = 0; i < 3; i++)
 			{
 				const auto & vertex = model.Vertex(face.vertices[i]);
@@ -130,15 +132,15 @@ namespace Graphics
 				worldCoords[i] = vertex;
 			}
 
-			Math::Vec3f normal = Math::CrossProduct(worldCoords[1] - worldCoords[0], worldCoords[2] - worldCoords[0]).normalize();
-			const float intensity = Math::ScalarProduct(light, normal);
+			vec3 normal = cross(worldCoords[1] - worldCoords[0], worldCoords[2] - worldCoords[0]).normalize();
+			const float intensity = light * normal;
 
 			if (diffuseTextureDisabled)
 			{
 				const auto color = Color(
-					Math::lerp(0, 255, intensity),
-					Math::lerp(0, 255, intensity),
-					Math::lerp(0, 255, intensity),
+					Utils::lerp(0, 255, intensity),
+					Utils::lerp(0, 255, intensity),
+					Utils::lerp(0, 255, intensity),
 					255);
 				Triangle(screenCoords[0], screenCoords[1], screenCoords[2], color);
 			}
@@ -147,12 +149,12 @@ namespace Graphics
 				auto tv0 = face.textureVertices[0];
 				auto tv1 = face.textureVertices[1];
 				auto tv2 = face.textureVertices[2];
-				auto bbox = Math::BoundingBoxT(model.TextureVertex(tv0), model.TextureVertex(tv1), model.TextureVertex(tv2));
+				auto bbox = Utils::BoundingBox(model.TextureVertex(tv0), model.TextureVertex(tv1), model.TextureVertex(tv2));
 				
 				ColorFunction getColor = [&](const ColorContext & context)
 				{
-					const float u = Math::lerp(bbox.Min().x, bbox.Max().x, context.t.x);
-					const float v = Math::lerp(bbox.Min().y, bbox.Max().y, context.t.y);
+					const float u = Utils::lerp(bbox.Min().x, bbox.Max().x, context.t.x);
+					const float v = Utils::lerp(bbox.Min().y, bbox.Max().y, context.t.y);
 					auto color = GetDiffuseColor(diffuseTexture, u, v);
 					color.a *= intensity;
 					color.r *= intensity;
@@ -198,15 +200,15 @@ namespace Graphics
 		return image.WriteTgaFile(filename.data());
 	}
 
-	void Canvas::CheckPointIsInside(const Math::Vec3u& p)
+	void Canvas::CheckPointIsInside(const vec3& p)
 	{
 		if (p.x >= Width() || p.y >= Height())
 		{
-			Utils::OutOfRange("Point [" + std::to_string(p.x) + ", " + std::to_string(p.y) + ", " + std::to_string(p.z) + "] is outside of canvas!");
+			throw std::out_of_range("Point [" + std::to_string(p.x) + ", " + std::to_string(p.y) + ", " + std::to_string(p.z) + "] is outside of canvas!");
 		}
 	}
 
-	void Canvas::TrySet(const Math::Vec3f & point, const Color & color)
+	void Canvas::TrySet(const vec3 & point, const Color & color)
 	{
 		uint32_t pos = point.x + point.y * _texture.Width();
 		WUSIKO_ASSERT(pos < _zBuffer.size());

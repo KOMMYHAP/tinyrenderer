@@ -1,6 +1,9 @@
 #pragma once
 
 #pragma pack(push,1)
+#include <array>
+#include <vector>
+
 struct TGA_Header
 {
 	char idlength;
@@ -20,7 +23,7 @@ struct TGA_Header
 
 struct TGAColor
 {
-	array<unsigned char, 4> bgra{};
+	std::array<unsigned char, 4> bgra{};
 	unsigned char bytespp;
 
 	TGAColor()
@@ -103,10 +106,10 @@ public:
 	[[nodiscard]] auto Buffer()  { return _bytes.data(); }
 	
 private:
-	bool load_rle_data(ifstream & in);
-	bool unload_rle_data(ofstream & out) const;
-	
-	vector<unsigned char> _bytes;
+	bool load_rle_data(std::ifstream & in);
+	bool unload_rle_data(std::ofstream & out) const;
+
+	std::vector<unsigned char> _bytes;
 	int _width = 0;
 	int _height = 0;
 	int _bytespp = 0;

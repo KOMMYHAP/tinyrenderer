@@ -1,15 +1,15 @@
 #pragma once
 
 #include <vector>
-#include "Vec3.h"
+#include "geometry.h"
 
 namespace Graphics
 {
 	struct FaceInfo
 	{
-		Math::Vec3u vertices;
-		Math::Vec3u textureVertices;
-		Math::Vec3u normals;
+		vec3 vertices;
+		vec3 textureVertices;
+		vec3 normals;
 	};
 	
 	class Model
@@ -28,9 +28,9 @@ namespace Graphics
 		[[nodiscard]] const auto & Normals() const { return _normals; }
 
 	private:
-		vector<Math::Vec3f> _vertexes;
-		vector<Math::Vec3f> _textureVertexes;
-		vector<Math::Vec3f> _normals;
+		vector<vec3> _vertexes;
+		vector<vec3> _textureVertexes;
+		vector<vec3> _normals;
 		vector<FaceInfo> _faces;
 	};
 }
